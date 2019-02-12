@@ -1,4 +1,7 @@
-CREDBG    = '\33[41m'
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
+CREDBG  = '\33[41m'
 CEND = '\033[0m'
 CWHITEBG  = '\33[47m'
 
@@ -20,6 +23,7 @@ def printCard(flip):
 
 
 def printBoard(board):
+    print("\n")
     for i in range(12):
         tmp = ''
         for j in range(8):

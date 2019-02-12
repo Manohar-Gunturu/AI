@@ -147,6 +147,7 @@ number_angle = {"1": 0, "2": 90, "3": 180, "4": 270, "5": 0, "6": 90, "7": 180, 
 while count <= 24:
     print('Player ', whose_turn, ' turn')
     inp = input("Enter card details ").split(" ")
+    print(inp)
     if inp[0] == "0":
         angle = number_angle[inp[1]]
 
@@ -159,24 +160,24 @@ while count <= 24:
         continue
 
     if angle == 0:
-        Board[row][column] = card.left.position(row, column)
         if not isLegalMove(row, column + 1, angle):
             continue
+        Board[row][column] = card.left.position(row, column)
         Board[row][column + 1] = card.right.position(row, column + 1)
     elif angle == 90:
-        Board[row][column] = card.right.position(row, column)
         if not isLegalMove(row - 1, column, angle):
             continue
+        Board[row][column] = card.right.position(row, column)
         Board[row - 1][column] = card.left.position(row - 1, column)
     elif angle == 180:
-        Board[row][column] = card.right.position(row, column)
         if not isLegalMove(row, column + 1, angle):
             continue
+        Board[row][column] = card.right.position(row, column)
         Board[row][column + 1] = card.left.position(row, column + 1)
     elif angle == 270:
-        Board[row][column] = card.left.position(row, column)
         if not isLegalMove(row - 1, column, angle):
             continue
+        Board[row][column] = card.left.position(row, column)
         Board[row - 1][column] = card.right.position(row - 1, column)
     printBoard(Board)
     if checkWinner(card, player_choices[whose_turn - 1]):
