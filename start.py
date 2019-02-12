@@ -6,7 +6,6 @@ from Printer import printBoard
 
 Board = [[None for x in range(8)] for y in range(12)]
 
-
 # position must be A4 or C5 like that
 
 def getCellPosition(position):
@@ -17,7 +16,7 @@ def getCellPosition(position):
 
 
 def isValidcell(row, column):
-    if row <= 11 and row >= 0 and column >= 0 and row <= 7:
+    if row <= 11 and row >= 0 and column >= 0 and column <= 7:
         return True
     else:
         return False
@@ -34,7 +33,8 @@ def check_winner_diag(_card):
     while isValidcell(tmprow, tmpcolumn) and Board[tmprow][tmpcolumn] \
         is not None and Board[tmprow][tmpcolumn].color == compare[0]:
         match[0] += 1
-        tmprow += 1
+        tmprow -= 1
+        print(match)
         tmpcolumn += 1
 
     # checking for dot match
@@ -43,31 +43,35 @@ def check_winner_diag(_card):
     while isValidcell(tmprow, tmpcolumn) and Board[tmprow][tmpcolumn] \
         is not None and Board[tmprow][tmpcolumn].dot == compare[1]:
         match[1] += 1
-        tmprow += 1
+        tmprow -= 1
+        print(match)
         tmpcolumn += 1
 
     # checking for color match
 
-    (tmprow, tmpcolumn) = (_row - 1, _column - 1)
+    (tmprow, tmpcolumn) = (_row + 1, _column - 1)
     while isValidcell(tmprow, tmpcolumn) and Board[tmprow][tmpcolumn] \
         is not None and Board[tmprow][tmpcolumn].color == compare[0]:
         match[0] += 1
-        tmprow -= 1
+        tmprow += 1
+        print(match)
         tmpcolumn -= 1
 
-    # checking for color match
+    # checking for dot match
 
-    (tmprow, tmpcolumn) = (_row - 1, _column - 1)
+    (tmprow, tmpcolumn) = (_row + 1, _column - 1)
+    print(tmprow, tmpcolumn)
     while isValidcell(tmprow, tmpcolumn) and Board[tmprow][tmpcolumn] \
         is not None and Board[tmprow][tmpcolumn].dot == compare[1]:
         match[1] += 1
-        tmprow -= 1
+        tmprow += 1
+        print(match, "dot check")
         tmpcolumn -= 1
 
     if match[0] >= 4 or match[1] >= 4:
-        return True
+        return (True, match)
     else:
-        return False
+        return (False, match)
 
 
 def check_winner_row(_card):
@@ -78,8 +82,7 @@ def check_winner_row(_card):
     while row_tmp >= 0 and match[0] <= 4 and match[1] <= 4:
         row_tmp = row_tmp - 1
         if Board[row_tmp][_column] is None:
-            match = [0, 0]
-            continue
+            break
         compare1[0] = Board[row_tmp][_column].color
         compare1[1] = Board[row_tmp][_column].dot
         if compare[0] != compare1[0]:
@@ -87,7 +90,6 @@ def check_winner_row(_card):
             match[0] = 1
         else:
             match[0] = match[0] + 1
-        print (compare[1], compare[0])
         if compare[1] != compare1[1]:
             compare[1] = compare1[1]
             match[1] = 1
@@ -95,9 +97,9 @@ def check_winner_row(_card):
             match[1] = match[1] + 1
 
     if match[0] >= 4 or match[1] >= 4:
-        return True
+        return (True, match)
     else:
-        return False
+        return (False, match)
 
 
 def check_winner_column(_card):
@@ -108,8 +110,7 @@ def check_winner_column(_card):
     while column_tmp >= 0 and match[0] <= 4 and match[1] <= 4:
         column_tmp = column_tmp - 1
         if Board[_row][column_tmp] is None:
-            match = [0, 0]
-            continue
+            break
         compare1[0] = Board[_row][column_tmp].color
         compare1[1] = Board[_row][column_tmp].dot
         if compare[0] != compare1[0]:
@@ -170,7 +171,7 @@ def isLegalMoveUtil(row, column, angle):
 def isLegalMove(row, column, angle):
     isgood = isLegalMoveUtil(row, column, angle)
     if not isgood:
-        print ('Sorry, Illegal place')
+        print('Sorry, Illegal place')
     return isgood
 
 
@@ -202,7 +203,7 @@ while count <= 24:
     if inp[0] == '0':
         angle = number_angle[inp[1]]
     else:
-        print ("I hope u're doing Recycling Moves, but have to complete 24 cards")
+        print("I hope u're doing Recycling Moves, but have to complete 24 cards")
         continue
     side = (1 if int(inp[1]) <= 4 else 2)
     (row, column) = getCellPosition([inp[2], inp[3]])
