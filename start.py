@@ -103,6 +103,7 @@ def checkWinner(card, hisChoice):
 
 
 def isLegalMoveUtil(row, column, angle):
+
     if Board[row][column] is not None:
         return False
     else:
@@ -112,13 +113,14 @@ def isLegalMoveUtil(row, column, angle):
         return True
 
     if angle == 90 or angle == 270:
-        if Board[row + 1][column] is not None:
+        if Board[row - 1][column] is None and Board[row + 1][column] is not None:
             return True
         else:
             return False
 
     if angle == 0 or angle == 180:
-        if Board[row + 1][column] is not None:
+        if Board[row][column + 1] is None and Board[row + 1][column + 1] is not None \
+                and Board[row + 1][column] is not None:
             return True
         else:
             return False
@@ -138,7 +140,7 @@ def calc_turn(turn):
         return 1
 
 
-player1_choice = input("Enter your Player 1 choice either dot or color ")
+player1_choice = input("Enter your Player 1 choice either dot or color ").lower()
 player2_choice = "dot" if player1_choice == "color" else "color"
 player_choices = (player1_choice, player2_choice)
 count = 0
@@ -146,11 +148,13 @@ whose_turn = 1
 number_angle = {"1": 0, "2": 90, "3": 180, "4": 270, "5": 0, "6": 90, "7": 180, "8": 270}
 while count <= 24:
     print('Player ', whose_turn, ' turn')
-    inp = input("Enter card details ").split(" ")
+    inp = input("Enter card details ").strip().split(" ")
     print(inp)
     if inp[0] == "0":
         angle = number_angle[inp[1]]
-
+    else:
+        print("I hope u're doing Recycling Moves, but have to complete 24 cards")
+        continue
     side = 1 if int(inp[1]) <= 4 else 2
     (row, column) = getCellPosition([inp[2], inp[3]])
     card = Card(row, column)
@@ -160,23 +164,15 @@ while count <= 24:
         continue
 
     if angle == 0:
-        if not isLegalMove(row, column + 1, angle):
-            continue
         Board[row][column] = card.left.position(row, column)
         Board[row][column + 1] = card.right.position(row, column + 1)
     elif angle == 90:
-        if not isLegalMove(row - 1, column, angle):
-            continue
         Board[row][column] = card.right.position(row, column)
         Board[row - 1][column] = card.left.position(row - 1, column)
     elif angle == 180:
-        if not isLegalMove(row, column + 1, angle):
-            continue
         Board[row][column] = card.right.position(row, column)
         Board[row][column + 1] = card.left.position(row, column + 1)
     elif angle == 270:
-        if not isLegalMove(row - 1, column, angle):
-            continue
         Board[row][column] = card.left.position(row, column)
         Board[row - 1][column] = card.right.position(row - 1, column)
     printBoard(Board)
