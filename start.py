@@ -6,6 +6,7 @@ from Printer import printBoard
 
 Board = [[None for x in range(8)] for y in range(12)]
 
+
 # position must be A4 or C5 like that
 
 def getCellPosition(position):
@@ -34,7 +35,7 @@ def check_winner_diag(_card):
         is not None and Board[tmprow][tmpcolumn].color == compare[0]:
         match[0] += 1
         tmprow -= 1
-        print(match)
+        print (match)
         tmpcolumn += 1
 
     # checking for dot match
@@ -44,7 +45,7 @@ def check_winner_diag(_card):
         is not None and Board[tmprow][tmpcolumn].dot == compare[1]:
         match[1] += 1
         tmprow -= 1
-        print(match)
+        print (match)
         tmpcolumn += 1
 
     # checking for color match
@@ -54,18 +55,17 @@ def check_winner_diag(_card):
         is not None and Board[tmprow][tmpcolumn].color == compare[0]:
         match[0] += 1
         tmprow += 1
-        print(match)
+        print (match)
         tmpcolumn -= 1
 
     # checking for dot match
 
     (tmprow, tmpcolumn) = (_row + 1, _column - 1)
-    print(tmprow, tmpcolumn)
+    print (tmprow, tmpcolumn)
     while isValidcell(tmprow, tmpcolumn) and Board[tmprow][tmpcolumn] \
         is not None and Board[tmprow][tmpcolumn].dot == compare[1]:
         match[1] += 1
         tmprow += 1
-        print(match, "dot check")
         tmpcolumn -= 1
 
     if match[0] >= 4 or match[1] >= 4:
@@ -126,21 +126,55 @@ def check_winner_column(_card):
             match[1] = match[1] + 1
 
     if match[0] >= 4 or match[1] >= 4:
-        return True
+        return (True, match)
     else:
-        return False
+        return (False, match)
 
 
-def checkWinner(card):
-    if check_winner_column(card.left) \
-        or check_winner_column(card.right):
-        return True
-    elif check_winner_row(card.left) or check_winner_row(card.right):
-        return True
-    elif check_winner_diag(card.left) or check_winner_diag(card.right):
-        return True
+def checkWinnerUtil(card):
+
+    x = check_winner_column(card.left)
+    if x[0]:
+        return x
+    x = check_winner_column(card.right)
+    if x[0]:
+        return x
+    x = check_winner_row(card.left)
+    if x[0]:
+        return x
+    x = check_winner_row(card.right)
+    if x[0]:
+        return x
+    x = check_winner_diag(card.left)
+    if x[0]:
+        return x
+    x = check_winner_diag(card.right)
+    if x[0]:
+        return x
     else:
+        return ()
+
+
+def checkWinner(card, _choice, player):
+    how_he_won = checkWinnerUtil(card)
+    if len(how_he_won) == 0:
         return False
+
+    score = how_he_won[1]
+    if how_he_won[0]:
+        if score[0] >= 4 and score[1] >= 4:  # it is draw so last player win
+            print (player, ' won,- it is draw so last player win')
+            return True
+        elif score[0] >= 4:
+            print (_choice['color'],
+                   ' has won the game as he choosen color')
+            return True
+        elif score[1] >= 4:
+            print (_choice['dot'], ' has won the game as he choosen dot'
+                   )
+            return True
+        else:
+            return False
 
 
 def isLegalMoveUtil(row, column, angle):
@@ -171,7 +205,7 @@ def isLegalMoveUtil(row, column, angle):
 def isLegalMove(row, column, angle):
     isgood = isLegalMoveUtil(row, column, angle)
     if not isgood:
-        print('Sorry, Illegal place')
+        print ('Sorry, Illegal place')
     return isgood
 
 
@@ -184,7 +218,7 @@ def calc_turn(turn):
 
 player1_choice = input('Enter your Player 1 choice either dot or color ').lower()
 player2_choice = ('dot' if player1_choice == 'color' else 'color')
-player_choices = (player1_choice, player2_choice)
+player_choices = {player1_choice: '1', player2_choice: '2'}
 count = 0
 whose_turn = 1
 number_angle = {
@@ -203,8 +237,9 @@ while count <= 24:
     if inp[0] == '0':
         angle = number_angle[inp[1]]
     else:
-        print("I hope u're doing Recycling Moves, but have to complete 24 cards")
+        print ("I hope u're doing Recycling Moves, but have to complete 24 cards")
         continue
+
     side = (1 if int(inp[1]) <= 4 else 2)
     (row, column) = getCellPosition([inp[2], inp[3]])
     card = Card(row, column)
@@ -226,8 +261,7 @@ while count <= 24:
         Board[row][column] = card.left.position(row, column)
         Board[row - 1][column] = card.right.position(row - 1, column)
     printBoard(Board)
-    if checkWinner(card):
-        print ('Winner is ', whose_turn)
+    if checkWinner(card, player_choices, whose_turn):
         break
     count = count + 1
     whose_turn = calc_turn(whose_turn)
