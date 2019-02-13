@@ -166,12 +166,10 @@ def checkWinner(card, _choice, player):
             print (player, ' won,- it is draw so last player win')
             return True
         elif score[0] >= 4:
-            print (_choice['color'],
-                   ' has won the game as he choosen color')
+            print (_choice['color'],' has won the game as he choosen color')
             return True
         elif score[1] >= 4:
-            print (_choice['dot'], ' has won the game as he choosen dot'
-                   )
+            print (_choice['dot'], ' has won the game as he choosen dot')
             return True
         else:
             return False
@@ -237,7 +235,7 @@ while count <= 24:
     if inp[0] == '0':
         angle = number_angle[inp[1]]
     else:
-        print ("I hope u're doing Recycling Moves, but have to complete 24 cards")
+        print ("I hope u're doing Recycling Moves, but have to complete placing 24 cards")
         continue
 
     side = (1 if int(inp[1]) <= 4 else 2)
