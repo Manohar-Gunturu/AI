@@ -1,9 +1,14 @@
 # AI
 Python AI Game
-TODO:
+Done:
 Two possible winners detection
 we are cheking either dots or colors - it seems like we have to check both. 
 because while playing player 1 player 2 can win.
+
+TODO:
+Recycling moves
+different tests
+identify if all 60 moves are done and give draw
 
 
 check:
