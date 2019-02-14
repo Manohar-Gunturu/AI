@@ -17,7 +17,7 @@ def getCellPosition(position):
 
 
 def isValidcell(row, column):
-    if row <= 11 and row >= 0 and column >= 0 and column <= 7:
+    if 11 >= row >= 0 and 7 >= column >= 0:
         return True
     else:
         return False
@@ -35,7 +35,7 @@ def check_winner_diag(_card):
         is not None and Board[tmprow][tmpcolumn].color == compare[0]:
         match[0] += 1
         tmprow -= 1
-        print (match)
+        print(match)
         tmpcolumn += 1
 
     # checking for dot match
@@ -45,7 +45,7 @@ def check_winner_diag(_card):
         is not None and Board[tmprow][tmpcolumn].dot == compare[1]:
         match[1] += 1
         tmprow -= 1
-        print (match)
+        print(match)
         tmpcolumn += 1
 
     # checking for color match
@@ -61,17 +61,17 @@ def check_winner_diag(_card):
     # checking for dot match
 
     (tmprow, tmpcolumn) = (_row + 1, _column - 1)
-    print (tmprow, tmpcolumn)
+    print(tmprow, tmpcolumn)
     while isValidcell(tmprow, tmpcolumn) and Board[tmprow][tmpcolumn] \
-        is not None and Board[tmprow][tmpcolumn].dot == compare[1]:
+            is not None and Board[tmprow][tmpcolumn].dot == compare[1]:
         match[1] += 1
         tmprow += 1
         tmpcolumn -= 1
 
     if match[0] >= 4 or match[1] >= 4:
-        return (True, match)
+        return True, match
     else:
-        return (False, match)
+        return False, match
 
 
 def check_winner_row(_card):
@@ -97,9 +97,9 @@ def check_winner_row(_card):
             match[1] = match[1] + 1
 
     if match[0] >= 4 or match[1] >= 4:
-        return (True, match)
+        return True, match
     else:
-        return (False, match)
+        return False, match
 
 
 def check_winner_column(_card):
@@ -126,9 +126,9 @@ def check_winner_column(_card):
             match[1] = match[1] + 1
 
     if match[0] >= 4 or match[1] >= 4:
-        return (True, match)
+        return True, match
     else:
-        return (False, match)
+        return False, match
 
 
 def checkWinnerUtil(card):
@@ -163,13 +163,13 @@ def checkWinner(card, _choice, player):
     score = how_he_won[1]
     if how_he_won[0]:
         if score[0] >= 4 and score[1] >= 4:  # it is draw so last player win
-            print (player, ' won,- it is draw so last player win')
+            print(player, ' won,- it is draw so last player win')
             return True
         elif score[0] >= 4:
-            print (_choice['color'],' has won the game as he choosen color')
+            print(_choice['color'],' has won the game as he choosen color')
             return True
         elif score[1] >= 4:
-            print (_choice['dot'], ' has won the game as he choosen dot')
+            print(_choice['dot'], ' has won the game as he choosen dot')
             return True
         else:
             return False
@@ -187,14 +187,14 @@ def isLegalMoveUtil(row, column, angle):
 
     if angle == 90 or angle == 270:
         if Board[row - 1][column] is None and Board[row + 1][column] \
-            is not None:
+                is not None:
             return True
         else:
             return False
 
     if angle == 0 or angle == 180:
-        if Board[row][column + 1] is None and Board[row + 1][column
-                + 1] is not None and Board[row + 1][column] is not None:
+        if Board[row][column + 1] is None and Board[row + 1][column + 1] \
+                is not None and Board[row + 1][column] is not None:
             return True
         else:
             return False
@@ -229,13 +229,26 @@ number_angle = {
     '7': 180,
     '8': 270,
     }
+
+
+def getPositionByAngle(angle, row, column):
+    if angle == 0:
+        return(row, column, row, column + 1)
+    elif angle == 90:
+        return(row - 1, column, row, column)
+    elif angle == 180:
+        return(row, column + 1, row, column)
+    elif angle == 270:
+        return(row, column, row - 1, column)
+
+
 while count <= 24:
-    print ('Player ', whose_turn, ' turn')
+    print('Player ', whose_turn, ' turn')
     inp = input('Enter card details ').strip().split(' ')
     if inp[0] == '0':
         angle = number_angle[inp[1]]
     else:
-        print ("I hope u're doing Recycling Moves, but have to complete placing 24 cards")
+        print("I hope u're doing Recycling Moves, but have to complete placing 24 cards")
         continue
 
     side = (1 if int(inp[1]) <= 4 else 2)
@@ -246,18 +259,9 @@ while count <= 24:
     if not isLegalMove(row, column, angle):
         continue
 
-    if angle == 0:
-        Board[row][column] = card.left.position(row, column)
-        Board[row][column + 1] = card.right.position(row, column + 1)
-    elif angle == 90:
-        Board[row][column] = card.right.position(row, column)
-        Board[row - 1][column] = card.left.position(row - 1, column)
-    elif angle == 180:
-        Board[row][column] = card.right.position(row, column)
-        Board[row][column + 1] = card.left.position(row, column + 1)
-    elif angle == 270:
-        Board[row][column] = card.left.position(row, column)
-        Board[row - 1][column] = card.right.position(row - 1, column)
+    pos = getPositionByAngle(angle, row, column)
+    Board[pos[0]][pos[1]] = card.left.position(pos[0], pos[1])
+    Board[pos[2]][pos[3]] = card.right.position(pos[2], pos[3])
     printBoard(Board)
     if checkWinner(card, player_choices, whose_turn):
         break
@@ -265,3 +269,44 @@ while count <= 24:
     whose_turn = calc_turn(whose_turn)
 
 # if while loop exited then it means placing 24 cards is done so entering into recycling phase
+
+
+def process_input():
+    try:
+        inp = input('Enter card details ').strip().split(' ')
+        if inp[0].isdigit():
+            print("Sorry invalid input")
+            return ()
+        lpos = getCellPosition([inp[0], inp[1]])
+        rpos = getCellPosition([inp[2], inp[3]])
+        npos = getCellPosition([inp[5], inp[6]])
+        if isValidcell(lpos) and isValidcell(rpos) and isValidcell(npos):
+            return lpos + rpos + (inp[4]) + npos
+    except ValueError:
+        return ()
+
+
+for i in range(56):
+    print('Player ', whose_turn, ' turn')
+    inp = process_input()
+    if len(inp) == 0:
+        print("Recycling move input error")
+        continue
+
+    left = Board[inp[0]][inp[1]]
+    right = Board[inp[2]][inp[3]]
+    if left is None or right is None or left.card != right.card:
+        print("That is an invalid card")
+        continue
+    # check is destination cell is available or could be same
+    angle = number_angle[inp[4]]
+    pos = getPositionByAngle(angle, inp[5], inp[6])
+    dleft = Board[pos[0]][pos[1]]
+    dright = Board[pos[2]][pos[3]]
+    if not ((dleft is None and dright is None) or \
+            ((dleft is None or (dleft is not None and dleft.card == left.card)) and \
+            ((dright is None or (dright is not None and dright.card == right.card))))):
+        print("Sorry it is a invalid recycling view")
+        continue
+
+    # now do the recycling view
