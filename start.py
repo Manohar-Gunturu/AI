@@ -253,10 +253,11 @@ while count <= 24:
 
     side = (1 if int(inp[1]) <= 4 else 2)
     (row, column) = getCellPosition([inp[2], inp[3]])
-    card = Card(row, column)
+    card = Card(row, column, whose_turn)
     card.config(side, angle, row, column)
 
     if not isLegalMove(row, column, angle):
+        print("Sorry not a good move")
         continue
 
     pos = getPositionByAngle(angle, row, column)
@@ -295,7 +296,7 @@ for i in range(56):
 
     left = Board[inp[0]][inp[1]]
     right = Board[inp[2]][inp[3]]
-    if left is None or right is None or left.card != right.card:
+    if left is None or right is None or left.card != right.card or left.card.player != whose_turn:
         print("That is an invalid card")
         continue
     # check is destination cell is available or could be same
@@ -303,10 +304,32 @@ for i in range(56):
     pos = getPositionByAngle(angle, inp[5], inp[6])
     dleft = Board[pos[0]][pos[1]]
     dright = Board[pos[2]][pos[3]]
-    if not ((dleft is None and dright is None) or \
-            ((dleft is None or (dleft is not None and dleft.card == left.card)) and \
-            ((dright is None or (dright is not None and dright.card == right.card))))):
-        print("Sorry it is a invalid recycling point")
+    if not ((dleft is None and dright is None) or
+            ((dleft is None or (dleft.card == left.card)) and
+            ((dright is None or (dright.card == right.card))))):
+        print("Sorry it is a invalid recycling view")
         continue
 
-    # now do the recycling view
+    # now do the recycling move
+    # first remove the previous card
+    Board[inp[0]][inp[1]] = None
+    Board[inp[2]][inp[3]] = None
+    side = (1 if int(inp[4]) <= 4 else 2)
+    # create new card
+
+    card = Card(pos[0], pos[1], whose_turn)
+    card.config(side, angle, pos[0], pos[1])
+
+    if not isLegalMove(pos[0], pos[1], angle):
+        print("Sorry not a good move")
+        continue
+    Board[pos[0]][pos[1]] = card.left.position(pos[0], pos[1])
+    Board[pos[2]][pos[3]] = card.right.position(pos[2], pos[3])
+    printBoard(Board)
+    if checkWinner(card, player_choices, whose_turn):
+        break
+    count = count + 1
+    whose_turn = calc_turn(whose_turn)
+
+
+print("Match is a draw, ;) ")
