@@ -3,6 +3,7 @@
 
 from Card import Card
 from Printer import printBoard
+from sys import exit
 
 Board = [[None for x in range(8)] for y in range(12)]
 
@@ -35,7 +36,6 @@ def check_winner_diag(_card):
         is not None and Board[tmprow][tmpcolumn].color == compare[0]:
         match[0] += 1
         tmprow -= 1
-        print(match)
         tmpcolumn += 1
 
     # checking for dot match
@@ -45,7 +45,6 @@ def check_winner_diag(_card):
         is not None and Board[tmprow][tmpcolumn].dot == compare[1]:
         match[1] += 1
         tmprow -= 1
-        print(match)
         tmpcolumn += 1
 
     # checking for color match
@@ -55,13 +54,11 @@ def check_winner_diag(_card):
         is not None and Board[tmprow][tmpcolumn].color == compare[0]:
         match[0] += 1
         tmprow += 1
-        print (match)
         tmpcolumn -= 1
 
     # checking for dot match
 
     (tmprow, tmpcolumn) = (_row + 1, _column - 1)
-    print(tmprow, tmpcolumn)
     while isValidcell(tmprow, tmpcolumn) and Board[tmprow][tmpcolumn] \
             is not None and Board[tmprow][tmpcolumn].dot == compare[1]:
         match[1] += 1
@@ -265,7 +262,7 @@ while count <= 24:
     Board[pos[2]][pos[3]] = card.right.position(pos[2], pos[3])
     printBoard(Board)
     if checkWinner(card, player_choices, whose_turn):
-        break
+        exit()
     count = count + 1
     whose_turn = calc_turn(whose_turn)
 
