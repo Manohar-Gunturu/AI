@@ -306,7 +306,7 @@ for i in range(56):
     if not ((dleft is None and dright is None) or \
             ((dleft is None or (dleft is not None and dleft.card == left.card)) and \
             ((dright is None or (dright is not None and dright.card == right.card))))):
-        print("Sorry it is a invalid recycling view")
+        print("Sorry it is a invalid recycling point")
         continue
 
     # now do the recycling view
