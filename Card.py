@@ -41,7 +41,7 @@ class Card:
         self.column = column
         self.player = player
 
-    def config(self, face, rotation, row, column,):
+    def config(self, face, rotation, row, column):
         self.face = face
         if face == 1:
             self.left = Red(self, 1)
