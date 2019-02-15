@@ -76,7 +76,7 @@ def check_winner_row(_card):
     (compare1, compare) = (['', ''], ['', ''])
     match = [1, 1]
     row_tmp = 12
-    while row_tmp >= 0 and match[0] <= 4 and match[1] <= 4:
+    while row_tmp >= 0 and match[0] < 4 and match[1] < 4:
         row_tmp = row_tmp - 1
         if Board[row_tmp][_column] is None:
             break
@@ -104,10 +104,13 @@ def check_winner_column(_card):
     (compare, compare1) = (['', ''], ['', ''])
     match = [1, 1]
     column_tmp = 8
-    while column_tmp >= 0 and match[0] <= 4 and match[1] <= 4:
+    while column_tmp >= 0 and match[0] < 4 and match[1] < 4:
         column_tmp = column_tmp - 1
         if Board[_row][column_tmp] is None:
-            break
+            (compare, compare1) = (['', ''], ['', ''])
+            match = [1, 1]
+            continue
+
         compare1[0] = Board[_row][column_tmp].color
         compare1[1] = Board[_row][column_tmp].dot
         if compare[0] != compare1[0]:
@@ -174,7 +177,7 @@ def checkWinner(card, _choice, player):
 
 def isLegalMoveUtil(row, column, angle):
 
-    if Board[row][column] is not None:
+    if isValidcell(row, column) and Board[row][column] is not None:
         return False
     else:
         pass
