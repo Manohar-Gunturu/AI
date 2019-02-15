@@ -10,6 +10,17 @@ Recycling moves
 different tests
 identify if all 60 moves are done and give draw
 
+check
+0 6 a 1
+0 5 e 1
+0 6 d 1
+0 2 c 1
+0 6 e 2
+0 3 b 1 <- bug here
+0 2 f 2
+ 
+
+
 check imp:
 0 5 c 1
 0 4 e 1
