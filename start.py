@@ -222,7 +222,7 @@ def calc_turn(turn):
 player1_choice = input('Enter your Player 1 choice either dot or color ').lower()
 player2_choice = ('dot' if player1_choice == 'color' else 'color')
 player_choices = {player1_choice: '1', player2_choice: '2'}
-count = 0
+count = 1
 whose_turn = 1
 number_angle = {
     '1': 0,
@@ -247,7 +247,7 @@ def getPositionByAngle(angle, row, column):
         return(row, column, row - 1, column)
 
 
-while count <= 24:
+while count <= 2:
     print('Player ', whose_turn, ' turn')
     inp = input('Enter card details ').strip().split(' ')
     if inp[0] == '0':
@@ -286,8 +286,8 @@ def process_input():
         lpos = getCellPosition([inp[0], inp[1]])
         rpos = getCellPosition([inp[2], inp[3]])
         npos = getCellPosition([inp[5], inp[6]])
-        if isValidcell(lpos) and isValidcell(rpos) and isValidcell(npos):
-            return lpos + rpos + (inp[4]) + npos
+        if isValidcell(*lpos) and isValidcell(*rpos) and isValidcell(*npos):
+            return lpos + rpos + (inp[4],) + npos
     except ValueError:
         return ()
 
