@@ -183,7 +183,12 @@ def isLegalMoveUtil(row, column, angle):
         pass
 
     if row == 11:
-        return True
+        if angle == 0 or angle == 180:
+            return Board[row][column + 1] is None
+        elif angle == 90 or angle == 270:
+            return Board[row - 1][column] is None
+        else:
+            return True
 
     if angle == 90 or angle == 270:
         if Board[row - 1][column] is None and Board[row + 1][column] \
