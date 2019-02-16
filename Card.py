@@ -4,10 +4,11 @@
 
 class Red:
 
-    def __init__(self, card, isdot):
+    def __init__(self, card, isdot, player):
         self.card = card
         self.color = 'red'
         self.dot = isdot
+        self.player = player
 
     def position(self, row, column):
         self.row = row
@@ -20,10 +21,11 @@ class Red:
 
 class White:
 
-    def __init__(self, card, isdot):
+    def __init__(self, card, isdot, player):
         self.card = card
         self.color = 'white'
         self.dot = isdot
+        self.player = player
 
     def position(self,row, column):
         self.row = row
@@ -44,11 +46,11 @@ class Card:
     def config(self, face, rotation, row, column):
         self.face = face
         if face == 1:
-            self.left = Red(self, 1)
-            self.right = White(self, 0)
+            self.left = Red(self, 1, self.player)
+            self.right = White(self, 0, self.player)
         else:
-            self.left = Red(self, 0)
-            self.right = White(self, 1)
+            self.left = Red(self, 0, self.player)
+            self.right = White(self, 1, self.player)
 
         self.rotation = rotation
         self.row = row
