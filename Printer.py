@@ -16,9 +16,9 @@ def printCard(flip):
        CBG = CWHITEBG
 
     if flip.player == 1:
-        PL = ' '
-    else:
         PL = '\u0060'
+    else:
+        PL = ' '
 
     if not flip.dot:
       return CBG + " \u25CB" + PL + CEND
