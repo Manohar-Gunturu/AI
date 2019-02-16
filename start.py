@@ -24,7 +24,7 @@ def isValidcell(row, column):
         return False
 
 
-def check_winner_diag(_card):
+def check_winner_diag1(_card):
     (_row, _column) = _card.getposition()
     (tmprow, tmpcolumn) = (_row, _column)
     match = [0, 0]
@@ -71,6 +71,48 @@ def check_winner_diag(_card):
         return (False, match)
 
 
+def check_winner_diag2(_card):
+    (_row, _column) = _card.getposition()
+    (tmprow, tmpcolumn) = (_row, _column)
+    match = [0, 0]
+    compare = [_card.color, _card.dot]
+    # checking for color match
+    while isValidcell(tmprow, tmpcolumn) and Board[tmprow][tmpcolumn] \
+        is not None and Board[tmprow][tmpcolumn].color == compare[0]:
+        match[0] += 1
+        tmprow -= 1
+        tmpcolumn -= 1
+
+    # checking for dot match
+    (tmprow, tmpcolumn) = (_row, _column)
+    while isValidcell(tmprow, tmpcolumn) and Board[tmprow][tmpcolumn] \
+        is not None and Board[tmprow][tmpcolumn].dot == compare[1]:
+        match[1] += 1
+        tmprow -= 1
+        tmpcolumn -= 1
+
+    # checking for color match
+    (tmprow, tmpcolumn) = (_row + 1, _column + 1)
+    while isValidcell(tmprow, tmpcolumn) and Board[tmprow][tmpcolumn] \
+        is not None and Board[tmprow][tmpcolumn].color == compare[0]:
+        match[0] += 1
+        tmprow += 1
+        tmpcolumn += 1
+
+    # checking for dot match
+    (tmprow, tmpcolumn) = (_row + 1, _column  1)
+    while isValidcell(tmprow, tmpcolumn) and Board[tmprow][tmpcolumn] \
+        is not None and Board[tmprow][tmpcolumn].dot == compare[1]:
+        match[1] += 1
+        tmprow += 1
+        tmpcolumn += 1
+
+    if match[0] >= 4 or match[1] >= 4:
+        return (True, match)
+    else:
+        return (False, match)
+
+
 def check_winner_row(_card):
     (_row, _column) = _card.getposition()
     (compare1, compare) = (['', ''], ['', ''])
@@ -107,7 +149,6 @@ def check_winner_column(_card):
     column_tmp = 8
     while (column_tmp - 1) >= 0 and (match[0] < 4 or match[1] < 4):
         column_tmp = column_tmp - 1
-        print(match)
         if Board[_row][column_tmp] is None:
             (compare, compare1) = (['', ''], ['', ''])
             match = [1, 1]
@@ -151,11 +192,19 @@ def checkWinnerUtil(card):
     if x[0]:
         print("r.right")
         return x
-    x = check_winner_diag(card.left)
+    x = check_winner_diag1(card.left)
     if x[0]:
         print("d.left")
         return x
-    x = check_winner_diag(card.right)
+    x = check_winner_diag1(card.right)
+    if x[0]:
+        print("d.right")
+        return x
+    x = check_winner_diag2(card.left)
+    if x[0]:
+        print("d.left")
+        return x
+    x = check_winner_diag2(card.right)
     if x[0]:
         print("d.right")
         return x
@@ -174,12 +223,10 @@ def checkWinner(card, _choice, player):
             print (player, ' won,- it is draw so last player win')
             return True
         elif score[0] >= 4:
-            print (_choice['color'],
-                   ' has won the game as he choosen color')
+            print (_choice['color'],' has won the game as he choosen color')
             return True
         elif score[1] >= 4:
-            print (_choice['dot'], ' has won the game as he choosen dot'
-                   )
+            print (_choice['dot'], ' has won the game as he choosen dot')
             return True
         else:
             return False
