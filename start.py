@@ -75,8 +75,8 @@ def check_winner_row(_card):
     (_row, _column) = _card.getposition()
     (compare1, compare) = (['', ''], ['', ''])
     match = [1, 1]
-    row_tmp = 11
-    while (row_tmp - 1) >= 0 and match[0] < 4 and match[1] < 4:
+    row_tmp = 12
+    while (row_tmp - 1) >= 0 and (match[0] < 4 or match[1] < 4):
         row_tmp = row_tmp - 1
         if Board[row_tmp][_column] is None:
             break
@@ -105,8 +105,9 @@ def check_winner_column(_card):
     (compare, compare1) = (['', ''], ['', ''])
     match = [1, 1]
     column_tmp = 8
-    while (column_tmp - 1) >= 0 and match[0] < 4 and match[1] < 4:
+    while (column_tmp - 1) >= 0 and (match[0] < 4 or match[1] < 4):
         column_tmp = column_tmp - 1
+        print(match)
         if Board[_row][column_tmp] is None:
             (compare, compare1) = (['', ''], ['', ''])
             match = [1, 1]
