@@ -310,8 +310,7 @@ def calc_turn(turn):
         return 1
 
 
-player1_choice = input('Enter your Player 1 choice either dot or color '
-                       ).lower()
+player1_choice = input('Enter your Player 1(\u0060) choice either dot or color ').lower()
 player2_choice = ('dot' if player1_choice == 'color' else 'color')
 player_choices = {player1_choice: '1', player2_choice: '2'}
 count = 1
