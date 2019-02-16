@@ -150,6 +150,9 @@ def check_winner_column(_card):
     while (column_tmp - 1) >= 0 and (match[0] < 4 or match[1] < 4):
         column_tmp = column_tmp - 1
         if Board[_row][column_tmp] is None:
+            #check what we have seen so far could contribute to win
+            if (match[0] >= 4 or match[1] >= 4):
+                return (True, match)
             (compare, compare1) = (['', ''], ['', ''])
             match = [1, 1]
             continue
