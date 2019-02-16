@@ -173,63 +173,87 @@ def check_winner_column(_card):
     else:
         return (False, match)
 
+def whatMakesWin(stat):
+    winby = stat[1]
+    if not stat[0]:
+        return [0,0]
+    if winby[0] >= 4 and winby[1] >= 4:
+        return [1,1]
+    elif winby[0] >= 4:
+        return [1,0]
+    elif winby[1] >= 4:
+        return [0,1]
+    else:
+        return [0,0]
 
 def checkWinnerUtil(card):
 
-    x = check_winner_column(card.left)
-    if x[0]:
+    x1 = check_winner_column(card.left)
+    x2 = check_winner_column(card.right)
+    x3 = check_winner_row(card.left)
+    x4 = check_winner_row(card.right)
+    x5 = check_winner_diag1(card.left)
+    x6 = check_winner_diag1(card.right)
+    x7 = check_winner_diag2(card.left)
+    x8 = check_winner_diag2(card.right)
+    # wins[0] for colors and wins[1] for dots 
+    wins = [0,0]
+    if x1[0]:
         print("c.left")
-        return x
-    x = check_winner_column(card.right)
-    if x[0]:
+        tmp = whatMakesWin(x1)
+        wins = [ (x + y) for (x, y) in zip(wins,tmp)   ]
+    if x2[0]:
         print("c.right")
-        return x
-    x = check_winner_row(card.left)
-    if x[0]:
+        tmp = whatMakesWin(x2)
+        wins = [ (x + y) for (x, y) in zip(wins,tmp)   ]
+    if x3[0]:
         print("r.left")
-        return x
-    x = check_winner_row(card.right)
-    if x[0]:
+        tmp = whatMakesWin(x3)
+        wins = [ (x + y) for (x, y) in zip(wins,tmp)   ]
+    if x4[0]:
         print("r.right")
-        return x
-    x = check_winner_diag1(card.left)
-    if x[0]:
+        tmp = whatMakesWin(x4)
+        wins = [ (x + y) for (x, y) in zip(wins,tmp)   ]
+    if x5[0]:
         print("d.left")
-        return x
-    x = check_winner_diag1(card.right)
-    if x[0]:
+        tmp = whatMakesWin(x5)
+        wins = [ (x + y) for (x, y) in zip(wins,tmp)   ]
+
+    if x6[0]:
         print("d.right")
-        return x
-    x = check_winner_diag2(card.left)
-    if x[0]:
+        tmp = whatMakesWin(x6)
+        wins = [ (x + y) for (x, y) in zip(wins,tmp)   ]
+
+    if x7[0]:
         print("d.left")
-        return x
-    x = check_winner_diag2(card.right)
-    if x[0]:
+        tmp = whatMakesWin(x7)
+        wins = [ (x + y) for (x, y) in zip(wins,tmp)   ]
+
+    if x8[0]:
         print("d.right")
-        return x
-    else:
-        return ()
+        tmp = whatMakesWin(x8)
+        wins = [ (x + y) for (x, y) in zip(wins,tmp)   ]
+    
+    return wins
 
 
 def checkWinner(card, _choice, player):
-    how_he_won = checkWinnerUtil(card)
-    if len(how_he_won) == 0:
+    score = checkWinnerUtil(card)
+   
+    if all(v == 0 for v in score):
         return False
 
-    score = how_he_won[1]
-    if how_he_won[0]:
-        if score[0] >= 4 and score[1] >= 4:  # it is draw so last player win
-            print (player, ' won,- it is draw so last player win')
-            return True
-        elif score[0] >= 4:
-            print (_choice['color'],' has won the game as he choosen color')
-            return True
-        elif score[1] >= 4:
-            print (_choice['dot'], ' has won the game as he choosen dot')
-            return True
-        else:
-            return False
+    if score[0] >= 1 and score[1] >= 1:  # it is draw so last player win
+        print (player, ' won,- it is draw so last player win')
+        return True
+    elif score[0] >= 1:
+        print ('Player ' , _choice['color'],' has won the game as he choosen color')
+        return True
+    elif score[1] >= 1:
+        print ('Player ', _choice['dot'], ' has won the game as he choosen dot')
+        return True
+    else:
+        return False
 
 
 def isLegalMoveUtil(row, column, angle):
@@ -357,7 +381,7 @@ def process_input():
     except (ValueError, IndexError):
         return ()
 
-print("Started recycling phase")
+print("-------- Started recycling phase ------")
 
 for i in range(56):
     print ('Player ', whose_turn, ' turn')
