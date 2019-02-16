@@ -118,6 +118,7 @@ def check_winner_row(_card):
     (compare1, compare) = (['', ''], ['', ''])
     match = [1, 1]
     row_tmp = 12
+    iswin = [1,1]
     while (row_tmp - 1) >= 0 and (match[0] < 4 or match[1] < 4):
         row_tmp = row_tmp - 1
         if Board[row_tmp][_column] is None:
@@ -126,6 +127,7 @@ def check_winner_row(_card):
         compare1[1] = Board[row_tmp][_column].dot
         if compare[0] != compare1[0]:
             compare[0] = compare1[0]
+            iswin[0] = max(match[0], iswin[0])
             match[0] = 1
         else:
             match[0] = match[0] + 1
@@ -133,13 +135,14 @@ def check_winner_row(_card):
         if compare[1] != compare1[1]:
             compare[1] = compare1[1]
             match[1] = 1
+            iswin[1] = max(match[1], iswin[1])
         else:
             match[1] = match[1] + 1
 
-    if match[0] >= 4 or match[1] >= 4:
-        return (True, match)
+    if iswin[0] >= 4 or iswin[1] >= 4:
+        return (True, iswin)
     else:
-        return (False, match)
+        return (False, iswin)
 
 
 def check_winner_column(_card):
@@ -147,12 +150,11 @@ def check_winner_column(_card):
     (compare, compare1) = (['', ''], ['', ''])
     match = [1, 1]
     column_tmp = 8
+    iswin = [1,1]
     while (column_tmp - 1) >= 0 and (match[0] < 4 or match[1] < 4):
         column_tmp = column_tmp - 1
         if Board[_row][column_tmp] is None:
-            #check what we have seen so far could contribute to win
-            if (match[0] >= 4 or match[1] >= 4):
-                return (True, match)
+            iswin = [ max(iswin[0],match[0]), max(iswin[1],match[1])  ]
             (compare, compare1) = (['', ''], ['', ''])
             match = [1, 1]
             continue
@@ -161,20 +163,22 @@ def check_winner_column(_card):
         compare1[1] = Board[_row][column_tmp].dot
         if compare[0] != compare1[0]:
             compare[0] = compare1[0]
+            iswin[0] = max(match[0], iswin[0])
             match[0] = 1
         else:
             match[0] = match[0] + 1
 
         if compare[1] != compare1[1]:
             compare[1] = compare1[1]
+            iswin[1] = max(match[1], iswin[1])
             match[1] = 1
         else:
             match[1] = match[1] + 1
 
-    if match[0] >= 4 or match[1] >= 4:
-        return (True, match)
+    if iswin[0] >= 4 or iswin[1] >= 4:
+        return (True, iswin)
     else:
-        return (False, match)
+        return (False, iswin)
 
 def whatMakesWin(stat):
     winby = stat[1]
@@ -385,7 +389,7 @@ def process_input():
 
 print("-------- Started recycling phase ------")
 
-for i in range(56):
+for i in range(36):
     print ('Player ', whose_turn, ' turn')
     inp = process_input()
     if len(inp) == 0:
