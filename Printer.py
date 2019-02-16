@@ -15,10 +15,15 @@ def printCard(flip):
     else:
        CBG = CWHITEBG
 
-    if not flip.dot:
-      return CBG + " \u25CB " + CEND
+    if flip.player == 1:
+        PL = ' '
     else:
-      return CBG + " \u25CF " + CEND
+        PL = '\u0060'
+
+    if not flip.dot:
+      return CBG + " \u25CB" + PL + CEND
+    else:
+      return CBG + " \u25CF" + PL + CEND
 
 
 
