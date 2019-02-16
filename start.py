@@ -75,8 +75,8 @@ def check_winner_row(_card):
     (_row, _column) = _card.getposition()
     (compare1, compare) = (['', ''], ['', ''])
     match = [1, 1]
-    row_tmp = 12
-    while row_tmp >= 0 and match[0] < 4 and match[1] < 4:
+    row_tmp = 11
+    while (row_tmp - 1) >= 0 and match[0] < 4 and match[1] < 4:
         row_tmp = row_tmp - 1
         if Board[row_tmp][_column] is None:
             break
@@ -87,6 +87,7 @@ def check_winner_row(_card):
             match[0] = 1
         else:
             match[0] = match[0] + 1
+
         if compare[1] != compare1[1]:
             compare[1] = compare1[1]
             match[1] = 1
@@ -104,7 +105,7 @@ def check_winner_column(_card):
     (compare, compare1) = (['', ''], ['', ''])
     match = [1, 1]
     column_tmp = 8
-    while column_tmp >= 0 and match[0] < 4 and match[1] < 4:
+    while (column_tmp - 1) >= 0 and match[0] < 4 and match[1] < 4:
         column_tmp = column_tmp - 1
         if Board[_row][column_tmp] is None:
             (compare, compare1) = (['', ''], ['', ''])
@@ -135,21 +136,27 @@ def checkWinnerUtil(card):
 
     x = check_winner_column(card.left)
     if x[0]:
+        print("c.left")
         return x
     x = check_winner_column(card.right)
     if x[0]:
+        print("c.right")
         return x
     x = check_winner_row(card.left)
     if x[0]:
+        print("r.left")
         return x
     x = check_winner_row(card.right)
     if x[0]:
+        print("r.right")
         return x
     x = check_winner_diag(card.left)
     if x[0]:
+        print("d.left")
         return x
     x = check_winner_diag(card.right)
     if x[0]:
+        print("d.right")
         return x
     else:
         return ()
@@ -275,9 +282,7 @@ while count <= 24:
         print ('Sorry not a good move')
         card = None
         continue
-    print(angle, row, column)
     pos = getPositionByAngle(angle, row, column)
-    print(pos)
     Board[pos[0]][pos[1]] = card.left.position(pos[0], pos[1])
     Board[pos[2]][pos[3]] = card.right.position(pos[2], pos[3])
     printBoard(Board)
