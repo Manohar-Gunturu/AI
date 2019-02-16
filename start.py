@@ -257,7 +257,7 @@ def getPositionByAngle(angle, row, column):
         return (row, column, row - 1, column)
 
 
-while count <= 4:
+while count <= 24:
     print ('Player ', whose_turn, ' turn')
     inp = input('Enter card details ').strip().split(' ')
     if inp[0] == '0' and inp[1] in number_angle:
