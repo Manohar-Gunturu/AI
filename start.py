@@ -178,7 +178,6 @@ def checkWinner(card, _choice, player):
 
 
 def isLegalMoveUtil(row, column, angle):
-
     if isValidcell(row, column) and Board[row][column] is not None:
         return False
     else:
@@ -212,6 +211,14 @@ def isLegalMove(row, column, angle):
     if not isgood:
         print ('Sorry, Illegal place')
     return isgood
+
+# to see if any card is hanging on an empty cell
+def isLegalMove1(pos, angle):
+    if Board[pos[0]][pos[1]]  == None and Board[pos[0] - 1][pos[1]] is not None:
+        return False
+    if Board[pos[2]][pos[3]]  == None and Board[pos[2] - 1][pos[3]] is not None:
+        return False
+    return True
 
 
 def calc_turn(turn):
@@ -253,7 +260,7 @@ def getPositionByAngle(angle, row, column):
 while count <= 4:
     print ('Player ', whose_turn, ' turn')
     inp = input('Enter card details ').strip().split(' ')
-    if inp[0] == '0' and  inp[1] in number_angle:
+    if inp[0] == '0' and inp[1] in number_angle:
         angle = number_angle[inp[1]]
     else:
         print ("Wrong place, kindly adviced to follow prof requirement")
@@ -294,9 +301,10 @@ def process_input():
         if isValidcell(*lpos) and isValidcell(*rpos) \
             and isValidcell(*npos):
             return lpos + rpos + (inp[4], ) + npos
-    except ValueError:
+    except (ValueError, IndexError):
         return ()
 
+print("Started recycling phase")
 
 for i in range(56):
     print ('Player ', whose_turn, ' turn')
@@ -308,8 +316,8 @@ for i in range(56):
     left = Board[inp[0]][inp[1]]
     right = Board[inp[2]][inp[3]]
     if left is None or right is None or left.card != right.card \
-        or left.card.player != whose_turn:
-        print('That is an invalid card - are the owner of this card, or this read and black belongs to different cards')
+        or left.card.player != whose_turn or not inp[4] in number_angle:
+        print('That is an invalid card - or not the owner of this card, or this red and black belongs to different cards')
         continue
 
     # check is destination cell is available or could be same
@@ -319,7 +327,6 @@ for i in range(56):
     # pos contains destination location of recycling move
 
     pos = getPositionByAngle(angle, inp[5], inp[6])
-    print("POS", pos)
     dleft = Board[pos[0]][pos[1]]
     dright = Board[pos[2]][pos[3]]
     if not (dleft is None and dright is None or (dleft is None
@@ -341,7 +348,6 @@ for i in range(56):
 
     card = Card(pos[0], pos[1], whose_turn)
     card.config(side, angle, pos[0], pos[1])
-    print("INP", inp)
     if not isLegalMove(inp[5], inp[6], angle):
         print('Sorry not a good move')
         card = None
@@ -353,9 +359,7 @@ for i in range(56):
     Board[pos[2]][pos[3]] = card.right.position(pos[2], pos[3])
 
     # check if removing card leave borad in illegal state, just check if the card above cells valid else revoke the move
-
-    if Board[inp[0]][inp[1]] is None and Board[inp[0] - 1][inp[1]] \
-        is not None:
+    if not isLegalMove1(inp, card_tmp.rotation):
         print('This move leaves board in illegal state, so reverting back!! :)')
         Board[pos[0]][pos[1]] = None
         Board[pos[2]][pos[3]] = None
