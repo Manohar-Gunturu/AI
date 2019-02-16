@@ -56,6 +56,13 @@ check3:
 0 8 G 2
 0 8 H 2
 
+check4:
+0 3 A 1
+0 7 C 1
+0 4 E 1
+0 5 C 2
+C3 C4 1 C3
+
 wrong:
 0 3 D 2
 0 3 C 1
