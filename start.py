@@ -100,7 +100,7 @@ def check_winner_diag2(_card):
         tmpcolumn += 1
 
     # checking for dot match
-    (tmprow, tmpcolumn) = (_row + 1, _column  1)
+    (tmprow, tmpcolumn) = (_row + 1, _column + 1)
     while isValidcell(tmprow, tmpcolumn) and Board[tmprow][tmpcolumn] \
         is not None and Board[tmprow][tmpcolumn].dot == compare[1]:
         match[1] += 1
