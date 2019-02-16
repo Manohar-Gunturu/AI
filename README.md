@@ -5,7 +5,7 @@ Two possible winners detection
 we are cheking either dots or colors - it seems like we have to check both. 
 because while playing player 1 player 2 can win.
 
-TODO:different tests
+TODO:different tests on recycling view -- please
 
 big check:
 0 8 c 1
@@ -54,6 +54,7 @@ c 1 c 2 4 c 1
 c 3 c 4 4 c 3
  
 a 1 a 1 2 g 2
+ 
 
 
 
