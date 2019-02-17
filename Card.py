@@ -38,10 +38,11 @@ class White:
 
 class Card:
 
-    def __init__(self, row, column, player):
+    def __init__(self, row, column, player, o):
         self.row = row
         self.column = column
         self.player = player
+        self.o = o
 
     def config(self, face, rotation, row, column):
         self.face = face
