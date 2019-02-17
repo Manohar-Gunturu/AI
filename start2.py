@@ -436,8 +436,10 @@ for i in range(36):
         if card_tmp.o != inp[4]:
             print("you can put it back at a *different* position with the same orientation", card_tmp.o)
             continue
-         
 
+    if card_tmp.row == inp[5] and card_tmp.column == inp[6] and card_tmp.o == inp[4]:
+        print("cannot put it back at the same position and with the same orientation ", card_tmp.o)
+        continue
 
     # now do the recycling move
     # first remove the previous card
