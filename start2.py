@@ -369,6 +369,7 @@ while count <= 24:
         exit()
     recent_card = card
     count = count + 1
+    print("count, ", count)
     whose_turn = calc_turn(whose_turn)
 
 
@@ -401,7 +402,7 @@ for i in range(36):
     left = Board[inp[0]][inp[1]]
     right = Board[inp[2]][inp[3]]
     if left is None or right is None or left.card != right.card \
-        or left.card == recent_card.card or not inp[4] in number_angle:
+        or left.card == recent_card or not inp[4] in number_angle:
         print('That is an invalid card - or not the owner of this card, or this red and black belongs to different cards')
         continue
 
