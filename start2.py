@@ -354,7 +354,7 @@ while count <= 24:
 
     side = (1 if int(inp[1]) <= 4 else 2)
     (row, column) = getCellPosition([inp[2], inp[3]])
-    card = Card(row, column, whose_turn)
+    card = Card(row, column, whose_turn, inp[1])
     card.config(side, angle, row, column)
 
     if not isLegalMove(row, column, angle):
@@ -403,7 +403,7 @@ for i in range(36):
     right = Board[inp[2]][inp[3]]
     if left is None or right is None or left.card != right.card \
         or left.card == recent_card or not inp[4] in number_angle:
-        print('That is an invalid card - or not the owner of this card, or this red and black belongs to different cards')
+        print('That is an invalid card - or just recent card, or this red and black belongs to different cards')
         continue
 
     # check is destination cell is available or could be same
@@ -415,16 +415,32 @@ for i in range(36):
     pos = getPositionByAngle(angle, inp[5], inp[6])
     dleft = Board[pos[0]][pos[1]]
     dright = Board[pos[2]][pos[3]]
+    card_tmp = Board[inp[0]][inp[1]].card
+
+    if inp[0] != 0:
+        if(Board[inp[0] - 1][inp[1]] is not None and Board[inp[0] - 1][inp[1]].card != card_tmp ):
+            print('Sorry it is an invalid recycling move - it has someting on top.l')            
+            continue
+    if inp[2] != 0:
+        if(Board[inp[2] - 1][inp[3]] is not None and Board[inp[2] - 1][inp[3]].card != card_tmp ):
+            print('Sorry it is an invalid recycling move - it has someting on top.r')   
+            continue
+
     if not (dleft is None and dright is None or (dleft is None
             or dleft.card == left.card) and (dright is None
             or dright.card == right.card)):
         print('Sorry it is a invalid recycling move')
         continue
 
+    if card_tmp.row != inp[5] or card_tmp.column != inp[6]:
+        if card_tmp.o != inp[4]:
+            print("you can put it back at a *different* position with the same orientation", card_tmp.o)
+            continue
+         
+
+
     # now do the recycling move
     # first remove the previous card
-
-    card_tmp = Board[inp[0]][inp[1]].card
     Board[inp[0]][inp[1]] = None
     Board[inp[2]][inp[3]] = None
 
@@ -432,7 +448,7 @@ for i in range(36):
 
     # create new card
 
-    card = Card(pos[0], pos[1], whose_turn)
+    card = Card(pos[0], pos[1], whose_turn, inp[4])
     card.config(side, angle, pos[0], pos[1])
     if not isLegalMove(inp[5], inp[6], angle):
         print('Sorry not a good move')
@@ -444,6 +460,7 @@ for i in range(36):
     Board[pos[0]][pos[1]] = card.left.position(pos[0], pos[1])
     Board[pos[2]][pos[3]] = card.right.position(pos[2], pos[3])
 
+    """
     # check if removing card leave borad in illegal state, just check if the card above cells valid else revoke the move
     if not isLegalMove1(inp, card_tmp.rotation):
         print('This move leaves board in illegal state, so reverting back!! :)')
@@ -452,6 +469,7 @@ for i in range(36):
         Board[inp[0]][inp[1]] = card_tmp.left
         Board[inp[2]][inp[3]] = card_tmp.right
         continue
+    """ 
     printBoard(Board)
     recent_card = card
     if checkWinner(card, player_choices, whose_turn):
