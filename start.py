@@ -139,6 +139,7 @@ def check_winner_row(_card):
         else:
             match[1] = match[1] + 1
 
+    iswin = [ max(iswin[0],match[0]), max(iswin[1],match[1])  ]
     if iswin[0] >= 4 or iswin[1] >= 4:
         return (True, iswin)
     else:
@@ -158,7 +159,6 @@ def check_winner_column(_card):
             (compare, compare1) = (['', ''], ['', ''])
             match = [1, 1]
             continue
-
         compare1[0] = Board[_row][column_tmp].color
         compare1[1] = Board[_row][column_tmp].dot
         if compare[0] != compare1[0]:
@@ -174,7 +174,7 @@ def check_winner_column(_card):
             match[1] = 1
         else:
             match[1] = match[1] + 1
-
+    iswin = [ max(iswin[0],match[0]), max(iswin[1],match[1])  ]
     if iswin[0] >= 4 or iswin[1] >= 4:
         return (True, iswin)
     else:
