@@ -3,34 +3,32 @@
 
 CREDBG  = '\33[41m'
 CEND = '\033[0m'
-CWHITEBG  = '\33[47m'
+CWHITEBG = '\33[47m'
 
-def printCard(flip):
-    if flip == None:
+
+def printCard(flip_):
+    if flip_ == 0:
         return '\33[60m' + " \u25CF " + CEND
-
     CBG = ''
-    if(flip.color == "red"):
+    if flip_ % 100 == 2 or flip_ % 100 == 4:
        CBG = CREDBG
     else:
        CBG = CWHITEBG
 
-    if flip.player == 1:
-        PL = '\u0060'
+    if flip_ % 100 == 3 or flip_ % 100 == 4:
+        return CBG + " \u25CB " + CEND
     else:
-        PL = ' '
-
-    if not flip.dot:
-      return CBG + " \u25CB" + PL + CEND
-    else:
-      return CBG + " \u25CF" + PL + CEND
+        return CBG + " \u25CF " + CEND
 
 
 
 def printBoard(board):
+
     print("\n")
-    for i in range(12):
-        tmp = ''
-        for j in range(8):
-          tmp += printCard(board[i][j])
-        print(tmp)
+    tmp = ''
+    for p in range(96):
+        if p % 8 == 0:
+            print(tmp)
+            tmp = ''
+        tmp += printCard(board[p])
+    print(tmp)
