@@ -1,8 +1,9 @@
 Board = []
 
-for i in range(96):
+for i1 in range(96):
     Board.append(0)
 
+default_track = [11, 11, 11, 11, 11, 11, 11, 11]
 
 # position must be A4 or C5 like that
 def getCellPosition(position):
@@ -290,7 +291,7 @@ def isLegalMoveUtil(row, column, angle):
 
     if row == 11:
         if angle == 0 or angle == 180:
-            return state_conv1(row, column + 1) == 0
+            return isValidcell(row, column + 1) and state_conv1(row, column + 1) == 0
         elif angle == 90 or angle == 270:
             return state_conv1(row - 1, column) == 0
         else:
@@ -333,11 +334,11 @@ def calc_turn(turn):
         return 1
 
 
-player1_choice = input('Enter your Player 1(\u0060) choice either dot or color ').lower()
+player1_choice = input('Enter your Player 1 choice either dot or color ').lower()
 player2_choice = ('dot' if player1_choice == 'color' else 'color')
 player_choices = {player1_choice: '1', player2_choice: '2'}
 count = 1
-recent_card = None
+
 whose_turn = 1
 number_angle = {
     '1': 0,
@@ -360,13 +361,20 @@ def state_conv(row, column):
     return pos
 
 
-def state_conv1(row, column):
+def mapper(card_side):
+    if card_side == 1:
+        return [4, 1]
+    else:
+        return [2, 3]
+
+
+def state_conv1(row1, column1):
     # assume index start at 0 0
-    row = row + 1
-    column = column + 1
-    pos = row * 8
-    pos = pos - (8 - column) - 1
-    return Board[pos]
+    row1 = row1 + 1
+    column1 = column1 + 1
+    pos1 = row1 * 8
+    pos1 = pos1 - (8 - column1) - 1
+    return Board[pos1]
 
 
 def getPositionByAngle(angle, row, column):

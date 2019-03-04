@@ -15,7 +15,7 @@ def printCard(flip_):
     else:
        CBG = CWHITEBG
 
-    if flip_ % 100 == 3 or flip_ % 100 == 4:
+    if flip_ % 100 == 2 or flip_ % 100 == 1:
         return CBG + " \u25CB " + CEND
     else:
         return CBG + " \u25CF " + CEND

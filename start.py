@@ -1,9 +1,8 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-from Printer import printBoard
+
 from sys import exit
-from Util import *
 from GameEngine import *
 
 tmpinput = """0 1 A 1
@@ -33,47 +32,34 @@ tmpinput = """0 1 A 1
 
 names_list = [y for y in (x.strip() for x in tmpinput.splitlines()) if y]
 count = 1
-
-
-def mapper(card_side):
-    if card_side == 1:
-        return [4, 1]
-    else:
-        return [2, 3]
-
-
+recent_card = []
+"""
+root: Node = Node(Board, None)
+root.set_track(copy.copy(default_track))
+root.set_level(0)
+generate_states(root)
+for child in root.children:
+    generate_states(child)
+exit()
+"""
 while count <= 24:
     print('Player ', whose_turn, ' turn')
-    # inp = input('Enter card details ').strip().split(' ')
-    inp = names_list[count - 1].split(' ')
-    if inp[0] == '0' and inp[1] in number_angle:
-        angle = number_angle[inp[1]]
-    else:
-        print("Wrong place, kindly advised to follow prof requirement")
+    inp = input('Enter card details ').strip().split(' ')
+    #inp = names_list[count - 1].split(' ')
+    if inp[0] != '0':
+        print("Don't you know the input format for a move")
         continue
-
-    side = (1 if int(inp[1]) <= 4 else 2)
     (row, column) = getCellPosition([inp[2], inp[3]])
-
-    if not isValidcell(row, column) or not isLegalMove(row, column, angle):
-        print('Sorry not a good move - out of index or illegal move ', inp)
-        break
+    result = place_card(row, column, inp[1], count, Board)
+    if result is None:
         continue
-    pos = getPositionByAngle(angle, row, column)
-    code = mapper(side)
-    Board[state_conv(pos[0], pos[1])] = (count * 100) + code[0]
-    Board[state_conv(pos[2], pos[3])] = (count * 100) + code[1]
-    printBoard(Board)
-
+    pos = result[0]
     if checkWinner(pos, player_choices, whose_turn):
         exit()
     recent_card = pos
     count = count + 1
     print("count, ", count)
     whose_turn = calc_turn(whose_turn)
-
-print(Board)
-exit()
 
 
 def card_number(num):
@@ -106,20 +92,20 @@ for i in range(36):
         print('Recycling move input error')
         continue
 
-    left = state_conv1(inp[0], inp[1])
-    right = state_conv1(inp[2], inp[3])
-    if left == 0 or right == 0 or card_number(left) != card_number(right) \
+    old_left = state_conv1(inp[0], inp[1])
+    old_right = state_conv1(inp[2], inp[3])
+    if old_left == 0 or old_right == 0 or card_number(old_left) != card_number(old_right) \
             or not inp[4] in number_angle:
-        print('That is an invalid card -  this red and white belongs to different cards')
+        print('That is an invalid card -  no card or  red and white belongs to different cards')
         continue
 
+    angle = number_angle[inp[4]]
     pos = getPositionByAngle(angle, inp[5], inp[6])
-    if pos == recent_card:
+    if inp[0:4] == recent_card:
         print("Illegal - just recent card")
         continue
 
     # check is destination cell is available or could be same
-    angle = number_angle[inp[4]]
     # pos contains destination location of recycling move
     dleft = state_conv1(pos[0], pos[1])
     dright = state_conv1(pos[2], pos[3])
@@ -134,43 +120,36 @@ for i in range(36):
             print('Sorry it is an invalid recycling move - it has something on top.r')
             continue
 
-    if (dleft != 0 and card_number(dleft) != card_number(left)) \
-            and (dright != 0 and card_number(dright) != card_number(right.card)):
+    if (dleft != 0 and card_number(dleft) != card_number(old_left)) \
+            or (dright != 0 and card_number(dright) != card_number(old_right)):
         print('Sorry it is a invalid recycling move - destination is positions are occupied')
         continue
 
-    if card_tmp.row != inp[5] or card_tmp.column != inp[6]:
-        if card_tmp.o != inp[4]:
-            print("you can put it back at a *different* position with the same orientation", card_tmp.o)
-            continue
-
-    if card_tmp.row == inp[5] and card_tmp.column == inp[6] and card_tmp.o == inp[4]:
-        print("cannot put it back at the same position and with the same orientation ", card_tmp.o)
+    if all(inp[k] == pos[k] for k in range(4)):
+        print("cannot put it back at the same position and with the same orientation ", card_tmp)
         continue
 
     # now do the recycling move
     # first remove the previous card
-    Board[inp[0]][inp[1]] = None
-    Board[inp[2]][inp[3]] = None
+    Board[state_conv(inp[0], inp[1])] = 0
+    Board[state_conv(inp[2], inp[3])] = 0
 
     side = (1 if int(inp[4]) <= 4 else 2)
 
     # create new card
 
-    card = Card(pos[0], pos[1], whose_turn, inp[4])
-    card.config(side, angle, pos[0], pos[1])
     if not isLegalMove(inp[5], inp[6], angle):
         print('Sorry not a good move')
-        card = None
-        Board[inp[0]][inp[1]] = card_tmp.left
-        Board[inp[2]][inp[3]] = card_tmp.right
+        Board[state_conv(inp[0], inp[1])] = old_left
+        Board[state_conv(inp[2], inp[3])] = old_right
         continue
 
-    Board[pos[0]][pos[1]] = card.left.position(pos[0], pos[1])
-    Board[pos[2]][pos[3]] = card.right.position(pos[2], pos[3])
+    code = mapper(side)
+    Board[state_conv(pos[0], pos[1])] = card_tmp + code[0]
+    Board[state_conv(pos[2], pos[3])] = card_tmp + code[1]
     printBoard(Board)
     recent_card = pos
-    if checkWinner(card, player_choices, whose_turn):
+    if checkWinner(pos, player_choices, whose_turn):
         exit()
     count = count + 1
     whose_turn = calc_turn(whose_turn)
