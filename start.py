@@ -1,10 +1,9 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-
+import time
 from sys import exit
 from GameEngine import *
-
 tmpinput = """0 1 A 1
             0 1 C 1
             0 1 E 1
@@ -33,24 +32,56 @@ tmpinput = """0 1 A 1
 names_list = [y for y in (x.strip() for x in tmpinput.splitlines()) if y]
 count = 1
 recent_card = []
-"""
-root: Node = Node(Board, None)
+
+
+root = Node(Board, None)
 root.set_track(copy.copy(default_track))
 root.set_level(0)
 generate_states(root)
+atl3 = 0
 for child in root.children:
     generate_states(child)
+    atl3 += len(child.children)
+print("--- %s  ---" , atl3)
 exit()
-"""
-while count <= 24:
-    print('Player ', whose_turn, ' turn')
+
+def take_human_input():
     inp = input('Enter card details ').strip().split(' ')
-    #inp = names_list[count - 1].split(' ')
+    # inp = names_list[count - 1].split(' ')
     if inp[0] != '0':
         print("Don't you know the input format for a move")
-        continue
+        return None
     (row, column) = getCellPosition([inp[2], inp[3]])
-    result = place_card(row, column, inp[1], count, Board)
+
+    return (row, column, inp[1])
+
+global_track  = [11, 11, 11, 11, 11, 11, 11, 11]
+
+def take_ai_input():
+    root = Node(Board, None)
+    root.set_track(copy.copy(global_track))
+    root.set_level(0)
+    generate_states(root)
+    for child in root.children:
+        generate_states(child)
+    #run min max
+
+
+while count <= 24:
+    print('Player ', whose_turn, ' turn')
+
+    if whose_turn == aifirst:
+        (row, column, card_number) = take_ai_input()
+    else:
+        (row, column, card_number) =  take_human_input()
+
+    if int(card_number) % 2 == 0:
+        global_track[column] -= 2
+    else:
+        global_track[column] -= 1
+        global_track[column + 1] -= 1
+
+    result = place_card(row, column, card_number, count, Board)
     if result is None:
         continue
     pos = result[0]

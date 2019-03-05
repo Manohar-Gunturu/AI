@@ -280,41 +280,41 @@ def checkWinner(card, _choice, player):
         return False
 
 
-def isLegalMoveUtil(row, column, angle):
-    if row == 10:
-        jk = 9
+def isLegalMoveUtil(row, column, angle, board_):
 
-    if state_conv1(row, column) != 0:
+    if state_conv1(row, column,board_) != 0:
         return False
     else:
         pass
 
     if row == 11:
         if angle == 0 or angle == 180:
-            return isValidcell(row, column + 1) and state_conv1(row, column + 1) == 0
+            return isValidcell(row, column + 1) and state_conv1(row, column + 1, board_) == 0
         elif angle == 90 or angle == 270:
-            return state_conv1(row - 1, column) == 0
+            return isValidcell(row - 1, column) and state_conv1(row - 1, column, board_) == 0
         else:
             return True
 
     if angle == 90 or angle == 270:
-        if state_conv1(row - 1, column) == 0 and state_conv1(row + 1, column) != 0:
+        if ( isValidcell(row - 1, column) and state_conv1(row - 1, column,board_) == 0) and \
+                ( isValidcell(row + 1, column) and state_conv1(row + 1, column, board_) != 0 ):
             return True
         else:
             return False
 
     if angle == 0 or angle == 180:
-        if state_conv1(row, column + 1) == 0 and \
-                state_conv1(row + 1, column + 1) != 0 and state_conv1(row + 1, column) != 0:
+        if ( isValidcell(row,column + 1) and state_conv1(row, column + 1,board_) == 0 ) and \
+                (state_conv1(row + 1, column + 1,board_) != 0 and state_conv1(row + 1, column,board_) != 0):
             return True
         else:
             return False
 
 
-def isLegalMove(row, column, angle):
-    isgood = isLegalMoveUtil(row, column, angle)
+def isLegalMove(row, column, angle, board_):
+    isgood = isLegalMoveUtil(row, column, angle, board_)
     if not isgood:
-        print('Sorry, Illegal place')
+        pass
+        #print('Sorry, Illegal place')
     return isgood
 
 
@@ -333,6 +333,14 @@ def calc_turn(turn):
     else:
         return 1
 
+"""
+isalphabeta_1 = input("alpha-beta should be yes or no")
+isalphabeta = True if isalphabeta_1 == "yes" else False
+istrace_1 = input("trace should be yes or no")
+istrace = True if istrace_1 == "yes" else False
+"""
+aifirst_1 = input("is AI plays first -  yes or no")
+aifirst = 1 if aifirst_1 == "yes" else 2
 
 player1_choice = input('Enter your Player 1 choice either dot or color ').lower()
 player2_choice = ('dot' if player1_choice == 'color' else 'color')
@@ -368,13 +376,13 @@ def mapper(card_side):
         return [2, 3]
 
 
-def state_conv1(row1, column1):
+def state_conv1(row1, column1, board_=Board):
     # assume index start at 0 0
     row1 = row1 + 1
     column1 = column1 + 1
     pos1 = row1 * 8
     pos1 = pos1 - (8 - column1) - 1
-    return Board[pos1]
+    return board_[pos1]
 
 
 def getPositionByAngle(angle, row, column):
