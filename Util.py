@@ -296,8 +296,8 @@ def isLegalMoveUtil(row, column, angle, board_):
             return True
 
     if angle == 90 or angle == 270:
-        if ( isValidcell(row - 1, column) and state_conv1(row - 1, column,board_) == 0) and \
-                ( isValidcell(row + 1, column) and state_conv1(row + 1, column, board_) != 0 ):
+        if (isValidcell(row - 1, column) and state_conv1(row - 1, column,board_) == 0) and \
+                (isValidcell(row + 1, column) and state_conv1(row + 1, column, board_) != 0):
             return True
         else:
             return False
@@ -310,11 +310,11 @@ def isLegalMoveUtil(row, column, angle, board_):
             return False
 
 
-def isLegalMove(row, column, angle, board_):
+def isLegalMove(row, column, angle, board_, isprint=True):
     isgood = isLegalMoveUtil(row, column, angle, board_)
     if not isgood:
-        pass
-        #print('Sorry, Illegal place')
+        if isprint:
+            print('Sorry, Illegal place')
     return isgood
 
 
@@ -340,7 +340,7 @@ istrace_1 = input("trace should be yes or no")
 istrace = True if istrace_1 == "yes" else False
 """
 aifirst_1 = input("is AI plays first -  yes or no")
-aifirst = 1 if aifirst_1 == "yes" else 2
+aifirst = 1 if aifirst_1 == "yes" else 0
 
 player1_choice = input('Enter your Player 1 choice either dot or color ').lower()
 player2_choice = ('dot' if player1_choice == 'color' else 'color')
@@ -375,6 +375,9 @@ def mapper(card_side):
     else:
         return [2, 3]
 
+
+def card_number(num):
+    return num - (num % 100)
 
 def state_conv1(row1, column1, board_=Board):
     # assume index start at 0 0

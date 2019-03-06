@@ -12,6 +12,7 @@ class Node:
         self.state = state
         self.parent = parent
         self.children = []
+        self.move = ()
         self.value = 0
         if parent is not None:
             self.track = []
@@ -19,6 +20,9 @@ class Node:
 
     def update_track(self, column_pos):
         self.track[column_pos] = self.track[column_pos] - 1
+
+    def set_move(self, move):
+        self.move = move
 
     def set_track(self, track):
         self.track = track

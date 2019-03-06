@@ -4,7 +4,7 @@
 import time
 from sys import exit
 from GameEngine import *
-import minmax
+from minmax import run_minmax
 tmpinput = """0 1 A 1
             0 1 C 1
             0 1 E 1
@@ -50,24 +50,25 @@ global_track = [11, 11, 11, 11, 11, 11, 11, 11]
 
 
 def take_ai_input():
-    root = Node(Board, None)
+    root = Node(copy.copy(Board), None)
     root.set_track(copy.copy(global_track))
     root.set_level(0)
     generate_states(root)
     for child in root.children:
         generate_states(child)
-    #run min max
-    minmax(root, 2)
-
+    # run min max
+    bestmove = run_minmax(root, 2)
+    print("--- %s ---", root.value)
+    move = root.children[bestmove].move
+    return move
 
 
 while count <= 24:
     print('Player ', whose_turn, ' turn')
-
-    if whose_turn == aifirst:
+    if whose_turn % 2 == aifirst:
         (row, column, card_number) = take_ai_input()
     else:
-        (row, column, card_number) =  take_human_input()
+        (row, column, card_number) = take_human_input()
 
     if int(card_number) % 2 == 0:
         global_track[column] -= 2
@@ -75,7 +76,7 @@ while count <= 24:
         global_track[column] -= 1
         global_track[column + 1] -= 1
 
-    result = place_card(row, column, card_number, count, Board)
+    result = place_card(row, column, str(card_number), count, Board)
     if result is None:
         continue
     pos = result[0]
@@ -85,10 +86,6 @@ while count <= 24:
     count = count + 1
     print("count, ", count)
     whose_turn = calc_turn(whose_turn)
-
-
-def card_number(num):
-    return num - (num % 100)
 
 
 # if while loop exited then it means placing 24 cards is done so entering into recycling phase
