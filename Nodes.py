@@ -12,6 +12,7 @@ class Node:
         self.state = state
         self.parent = parent
         self.children = []
+        self.value = 0
         if parent is not None:
             self.track = []
             self.level = parent.level + 1
@@ -24,6 +25,9 @@ class Node:
 
     def set_level(self, level):
         self.level = level
+
+    def set_value(self, value):
+        self.value = value
 
     def add_children(self, child_node):
         self.children.append(child_node)

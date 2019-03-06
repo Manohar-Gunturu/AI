@@ -4,9 +4,7 @@ from Util import *
 import copy
 
 
-def place_card(row, column, config_number, count, board_):
-    if row == 10 and column == 0:
-        xc = 9
+def place_card(row, column, config_number, count_, board_):
     if config_number in number_angle:
         angle = number_angle[config_number]
     else:
@@ -15,20 +13,22 @@ def place_card(row, column, config_number, count, board_):
 
     side = (1 if int(config_number) <= 4 else 2)
     if not isValidcell(row, column) or not isLegalMove(row, column, angle, board_):
-        #print('Sorry not a good move - out of index or illegal move ', config_number)
+        print('Sorry not a good move - out of index or illegal move ', config_number)
         return None
     pos = getPositionByAngle(angle, row, column)
     code = mapper(side)
-    board_[state_conv(pos[0], pos[1])] = (count * 100) + code[0]
-    board_[state_conv(pos[2], pos[3])] = (count * 100) + code[1]
-    #printBoard(board_)
+    board_[state_conv(pos[0], pos[1])] = (count_ * 100) + code[0]
+    board_[state_conv(pos[2], pos[3])] = (count_ * 100) + code[1]
+    printBoard(board_)
     return pos, board_
+
 
 """
 it seems like there is no need to hash a state
 """
-possible_moves = {}
-def generate_states(parent : Node):
+
+
+def generate_states(parent: Node):
     number_of_states = 0
     # traverse column wise to check possibilities
     for column in range(8):

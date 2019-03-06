@@ -4,6 +4,7 @@
 import time
 from sys import exit
 from GameEngine import *
+import minmax
 tmpinput = """0 1 A 1
             0 1 C 1
             0 1 E 1
@@ -34,28 +35,19 @@ count = 1
 recent_card = []
 
 
-root = Node(Board, None)
-root.set_track(copy.copy(default_track))
-root.set_level(0)
-generate_states(root)
-atl3 = 0
-for child in root.children:
-    generate_states(child)
-    atl3 += len(child.children)
-print("--- %s  ---" , atl3)
-exit()
-
 def take_human_input():
     inp = input('Enter card details ').strip().split(' ')
     # inp = names_list[count - 1].split(' ')
     if inp[0] != '0':
         print("Don't you know the input format for a move")
         return None
-    (row, column) = getCellPosition([inp[2], inp[3]])
+    row, column = getCellPosition([inp[2], inp[3]])
 
-    return (row, column, inp[1])
+    return row, column, inp[1]
 
-global_track  = [11, 11, 11, 11, 11, 11, 11, 11]
+
+global_track = [11, 11, 11, 11, 11, 11, 11, 11]
+
 
 def take_ai_input():
     root = Node(Board, None)
@@ -65,6 +57,8 @@ def take_ai_input():
     for child in root.children:
         generate_states(child)
     #run min max
+    minmax(root, 2)
+
 
 
 while count <= 24:
