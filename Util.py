@@ -333,9 +333,10 @@ def calc_turn(turn):
     else:
         return 1
 
-"""
+
 isalphabeta_1 = input("alpha-beta should be yes or no")
 isalphabeta = True if isalphabeta_1 == "yes" else False
+"""
 istrace_1 = input("trace should be yes or no")
 istrace = True if istrace_1 == "yes" else False
 """

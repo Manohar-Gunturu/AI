@@ -4,7 +4,7 @@
 import time
 from sys import exit
 from GameEngine import *
-from minmax import run_minmax
+from minmax import run_minmax, run_alphabeta
 tmpinput = """0 1 A 1
             0 1 C 1
             0 1 E 1
@@ -57,7 +57,10 @@ def take_ai_input():
     for child in root.children:
         generate_states(child)
     # run min max
-    bestmove = run_minmax(root, 2)
+    if not isalphabeta:
+        bestmove = run_minmax(root)
+    else:
+        bestmove = run_alphabeta(root)
     print("--- %s ---", root.value)
     move = root.children[bestmove].move
     return move
@@ -70,15 +73,16 @@ while count <= 24:
     else:
         (row, column, card_number) = take_human_input()
 
+
+
+    result = place_card(row, column, str(card_number), count, Board)
+    if result is None:
+        continue
     if int(card_number) % 2 == 0:
         global_track[column] -= 2
     else:
         global_track[column] -= 1
         global_track[column + 1] -= 1
-
-    result = place_card(row, column, str(card_number), count, Board)
-    if result is None:
-        continue
     pos = result[0]
     if checkWinner(pos, player_choices, whose_turn):
         exit()

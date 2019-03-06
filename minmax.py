@@ -2,6 +2,10 @@ from Util import state_conv1,card_number
 import operator
 
 
+def calc_en1(child):
+    return calc_en(child)
+
+
 def calc_en(child):
     sum_w_o = 0.0
     sum_w_d = 0.0
@@ -23,7 +27,7 @@ def calc_en_for_children(node, min_or_max):
     # for each child calculate
     ens = []
     for child in node.children:
-        en = calc_en(child)
+        en = calc_en1(child)
         child.set_value(en)
         ens.append(en)
     if min_or_max == "min":
@@ -44,21 +48,45 @@ def calc_en_for_children(node, min_or_max):
 """
 
 
-def run_minmax(node, levels):
+def run_minmax(node):
     if len(node.children) == 0:  # it means we reached leafs
         return None
 
     if len(node.children[0].children) == 0:
         # calculate e(n) on each state
         min_or_max = "max" if node.level % 2 == 0 else "min"
+        # print("applied ", min_or_max)
         best_index, best_en = calc_en_for_children(node, min_or_max)
         node.set_value(best_en)
         return best_index
 
     for child in node.children:
-        run_minmax(child, levels)
+        run_minmax(child)
 
     min_or_max = "max" if node.level % 2 == 0 else "min"
+    #print("applied ", min_or_max)
+    best_index, best_en = calc_en_for_children(node, min_or_max)
+    node.set_value(best_en)
+    return best_index
+
+
+def run_alphabeta(node):
+    if len(node.children) == 0:  # it means we reached leafs
+        return None
+
+    if len(node.children[0].children) == 0:
+        # calculate e(n) on each state
+        min_or_max = "max" if node.level % 2 == 0 else "min"
+        # print("applied ", min_or_max)
+        best_index, best_en = calc_en_for_children(node, min_or_max)
+        node.set_value(best_en)
+        return best_index
+
+    for child in node.children:
+        run_minmax(child)
+
+    min_or_max = "max" if node.level % 2 == 0 else "min"
+    #print("applied ", min_or_max)
     best_index, best_en = calc_en_for_children(node, min_or_max)
     node.set_value(best_en)
     return best_index
