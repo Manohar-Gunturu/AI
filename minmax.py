@@ -2,13 +2,23 @@ from Util import state_conv1, card_number
 import operator
 from math import inf
 
+en_count = 0
+
 def calc_en1(child):
     return calc_en(child)
 
+def get_en_count():
+    return en_app
+
+def reset_en_count():
+    global en_app
+    en_app = 0
 
 def calc_en(child):
     if len(child.children) != 0:
         return child.value
+    global en_count
+    en_count += 1
     sum_w_o = 0.0
     sum_w_d = 0.0
     sum_r_o = 0.0
@@ -69,32 +79,36 @@ def run_minmax(node):
     node.set_value(best_en)
     return best_index
 
-
+"""
+Reference: https://en.wikipedia.org/wiki/Alpha%E2%80%93beta_pruning
+"""
 def run_alphabeta(node, alpha, beta, ismaximizing):
     if len(node.children) == 0:
-        return ( calc_en(node), 0 )
+        return calc_en(node), 0
 
     if ismaximizing:
         maxEval = -inf
         maxIndex = 0
         for i in range(len(node.children)):
-            eval = run_alphabeta(node.children[i], alpha, beta, False)
-            if max(maxEval, eval[0]) != maxEval:
-                maxEval = eval[0]
+            result = run_alphabeta(node.children[i], alpha, beta, False)
+            value = result[0]
+            if max(maxEval, value) != maxEval:
+                maxEval = value
                 maxIndex = i
-            alpha = max(alpha, eval[0])
-            if beta <= alpha:
+            alpha = max(alpha, maxEval)
+            if alpha >= beta:
                 break
-        return ( maxEval, maxIndex )
+        return maxEval, maxIndex
     else:
         minEval = inf
         minIndex = 0
         for i in range(len(node.children)):
-            eval = run_alphabeta(node.children[i], alpha, beta, True)
-            if min(minEval, eval[0]) != minEval:
-                minEval = eval[0]
+            result = run_alphabeta(node.children[i], alpha, beta, True)
+            value = result[0]
+            if min(minEval, value) != minEval:
+                minEval = value
                 minIndex = i
-            beta = min(beta, eval[0])
-            if beta <= alpha:
+            beta = min(beta, minEval)
+            if alpha >= beta:
                 break
-        return ( minEval, minIndex )
+        return minEval, minIndex
