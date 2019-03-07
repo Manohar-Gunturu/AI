@@ -37,7 +37,7 @@ recent_card = []
 
 def take_human_input():
     inp = input('Enter card details ').strip().split(' ')
-    # inp = names_list[count - 1].split(' ')
+    #inp = names_list[count - 1].split(' ')
     if inp[0] != '0':
         print("Don't you know the input format for a move")
         return None
@@ -60,11 +60,11 @@ def take_ai_input():
     # run min max
     if not isalphabeta:
         bestmove = run_minmax(root)
-        print("--- %s ---", root.value, get_en_count())
+        print("e(n) brought up to root is ", root.value, " number of time e(n) applied", get_en_count())
     else:
         bestmove1 = run_alphabeta(root, -inf, inf, True)
         bestmove = bestmove1[1]
-        print("--- %s ---", bestmove1, get_en_count())
+        print("e(n) brought up to root is ", bestmove1, " number of time e(n) applied", get_en_count())
     move = root.children[bestmove].move
     return move
 

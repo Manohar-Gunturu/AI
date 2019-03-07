@@ -8,11 +8,11 @@ def calc_en1(child):
     return calc_en(child)
 
 def get_en_count():
-    return en_app
+    return en_count
 
 def reset_en_count():
-    global en_app
-    en_app = 0
+    global en_count
+    en_count = 0
 
 def calc_en(child):
     if len(child.children) != 0:

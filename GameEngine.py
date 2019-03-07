@@ -55,3 +55,10 @@ def generate_states(parent: Node):
             node.set_track(tmp_track)
             parent.add_children(node)
             number_of_states += 1
+
+def generate_recyc_states(parent: Node):
+    state = parent.state
+    printBoard(state)
+    printBoard(parent.track)
+    for column in range(8):
+        row = parent.track[column]
