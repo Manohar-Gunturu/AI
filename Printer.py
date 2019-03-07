@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-CREDBG  = '\33[41m'
+CREDBG = '\33[41m'
 CEND = '\033[0m'
 CWHITEBG = '\33[47m'
 
@@ -23,7 +23,6 @@ def printCard(flip_):
 
 
 def printBoard(board):
-
     print("\n")
     tmp = ''
     for p in range(96):

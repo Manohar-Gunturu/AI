@@ -79,6 +79,7 @@ def run_minmax(node):
     node.set_value(best_en)
     return best_index
 
+
 """
 Reference: https://en.wikipedia.org/wiki/Alpha%E2%80%93beta_pruning
 """

@@ -36,13 +36,12 @@ recent_card = []
 
 
 def take_human_input():
-    #inp = input('Enter card details ').strip().split(' ')
-    inp = names_list[count - 1].split(' ')
+    inp = input('Enter card details ').strip().split(' ')
+    #inp = names_list[count - 1].split(' ')
     if inp[0] != '0':
         print("Don't you know the input format for a move")
         return None
     row, column = getCellPosition([inp[2], inp[3]])
-
     return row, column, inp[1]
 
 
@@ -71,13 +70,11 @@ def take_ai_input():
 
 while count <= 24:
     print('Player ', whose_turn, ' turn')
-    """
     if whose_turn % 2 == aifirst:
         reset_en_count()
         (row, column, card_number) = take_ai_input()
     else:
-    """
-    (row, column, card_number) = take_human_input()
+        (row, column, card_number) = take_human_input()
 
     result = place_card(row, column, str(card_number), count, Board)
     if result is None:
@@ -112,25 +109,33 @@ def process_input():
     except (ValueError, IndexError):
         return ()
 
+
 print("-------- Started recycling phase ------")
 
+
 # sample test
-root = Node(copy.copy(Board), None)
-root.set_track(copy.copy(global_track))
-root.set_level(0)
-root.set_pos(recent_card)
-root.set_no_cards(count)
-generate_recyc_states(root)
-exit()
-
-
-
-
 def take_ai_rec_input():
-    pass
+    root = Node(copy.copy(Board), None)
+    root.set_track(copy.copy(global_track))
+    root.set_level(0)
+    root.set_pos(recent_card)
+    root.set_no_cards(count)
+    generate_recyc_states(root)
+    for child in root.children:
+        generate_recyc_states(child)
+    # run min max
+    if not isalphabeta:
+        bestmove = run_minmax(root)
+        print("e(n) brought up to root is ", root.value, " number of time e(n) applied", get_en_count())
+    else:
+        bestmove1 = run_alphabeta(root, -inf, inf, True)
+        bestmove = bestmove1[1]
+        print("e(n) brought up to root is ", bestmove1, " number of time e(n) applied", get_en_count())
+    move = root.children[bestmove].move
+    return move
 
 
-for i in range(36):
+while count <= 60:
     print('Player ', whose_turn, ' turn')
     if whose_turn % 2 == aifirst:
         reset_en_count()
@@ -142,6 +147,8 @@ for i in range(36):
         continue
 
     result = recycle_card(inp, recent_card, Board)
+    if result is None:
+        continue
     pos = result[1]
     recent_card = pos
     if checkWinner(pos, player_choices, whose_turn):
