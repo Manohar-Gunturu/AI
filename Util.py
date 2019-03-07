@@ -360,6 +360,18 @@ number_angle = {
     '8': 270,
 }
 
+number_angle1 = {
+    1: 0,
+    2: 90,
+    3: 180,
+    4: 270,
+    5: 0,
+    6: 90,
+    7: 180,
+    8: 270
+}
+
+
 
 def state_conv(row, column):
     # assume index start at 0 0

@@ -13,11 +13,15 @@ class Node:
         self.parent = parent
         self.children = []
         self.move = ()
+        self.pos = ()
         self.no_cards = 0
         self.value = 0
         if parent is not None:
             self.track = []
             self.level = parent.level + 1
+
+    def set_pos(self, pos):
+        self.pos = pos
 
     def update_track(self, column_pos):
         self.track[column_pos] = self.track[column_pos] - 1
