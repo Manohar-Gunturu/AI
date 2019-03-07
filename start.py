@@ -4,7 +4,7 @@
 import time
 from sys import exit
 from GameEngine import *
-from minmax import run_minmax, run_alphabeta
+from minmax import run_minmax, run_alphabeta, inf
 tmpinput = """0 1 A 1
             0 1 C 1
             0 1 E 1
@@ -53,15 +53,18 @@ def take_ai_input():
     root = Node(copy.copy(Board), None)
     root.set_track(copy.copy(global_track))
     root.set_level(0)
+    root.set_no_cards(count)
     generate_states(root)
     for child in root.children:
         generate_states(child)
     # run min max
     if not isalphabeta:
         bestmove = run_minmax(root)
+        print("--- %s ---", root.value)
     else:
-        bestmove = run_alphabeta(root)
-    print("--- %s ---", root.value)
+        bestmove1 = run_alphabeta(root, inf, -inf, True)
+        bestmove = bestmove1[1]
+        print("--- %s ---", bestmove1)
     move = root.children[bestmove].move
     return move
 

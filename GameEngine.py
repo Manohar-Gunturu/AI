@@ -38,7 +38,7 @@ def generate_states(parent: Node):
         row = parent.track[column]
         # check all 8 cards and if it is a possible to fit in pos
         for card_number in range(1, 9):
-            result = place_card(row, column, str(card_number), parent.level + 1, copy.copy(parent.state), False)
+            result = place_card(row, column, str(card_number), parent.no_cards, copy.copy(parent.state), False)
             if result is None:
                 continue
             tmp_track = copy.copy(parent.track)
@@ -50,6 +50,8 @@ def generate_states(parent: Node):
 
             node = Node(copy.copy(result[1]), parent)
             node.set_move((row, column, card_number))
+            node.set_level(parent.level + 1)
+            node.set_no_cards(parent.no_cards + 1)
             node.set_track(tmp_track)
             parent.add_children(node)
             number_of_states += 1

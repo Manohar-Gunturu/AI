@@ -13,6 +13,7 @@ class Node:
         self.parent = parent
         self.children = []
         self.move = ()
+        self.no_cards = 0
         self.value = 0
         if parent is not None:
             self.track = []
@@ -32,6 +33,9 @@ class Node:
 
     def set_value(self, value):
         self.value = value
+
+    def set_no_cards(self, value):
+        self.no_cards = value
 
     def add_children(self, child_node):
         self.children.append(child_node)

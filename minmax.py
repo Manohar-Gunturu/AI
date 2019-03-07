@@ -1,12 +1,14 @@
-from Util import state_conv1,card_number
+from Util import state_conv1, card_number
 import operator
-
+from math import inf
 
 def calc_en1(child):
     return calc_en(child)
 
 
 def calc_en(child):
+    if len(child.children) != 0:
+        return child.value
     sum_w_o = 0.0
     sum_w_d = 0.0
     sum_r_o = 0.0
@@ -49,8 +51,6 @@ def calc_en_for_children(node, min_or_max):
 
 
 def run_minmax(node):
-    if len(node.children) == 0:  # it means we reached leafs
-        return None
 
     if len(node.children[0].children) == 0:
         # calculate e(n) on each state
@@ -64,29 +64,37 @@ def run_minmax(node):
         run_minmax(child)
 
     min_or_max = "max" if node.level % 2 == 0 else "min"
-    #print("applied ", min_or_max)
+    # print("applied ", min_or_max)
     best_index, best_en = calc_en_for_children(node, min_or_max)
     node.set_value(best_en)
     return best_index
 
 
-def run_alphabeta(node):
-    if len(node.children) == 0:  # it means we reached leafs
-        return None
+def run_alphabeta(node, alpha, beta, ismaximizing):
+    if len(node.children) == 0:
+        return ( calc_en(node), 0 )
 
-    if len(node.children[0].children) == 0:
-        # calculate e(n) on each state
-        min_or_max = "max" if node.level % 2 == 0 else "min"
-        # print("applied ", min_or_max)
-        best_index, best_en = calc_en_for_children(node, min_or_max)
-        node.set_value(best_en)
-        return best_index
-
-    for child in node.children:
-        run_minmax(child)
-
-    min_or_max = "max" if node.level % 2 == 0 else "min"
-    #print("applied ", min_or_max)
-    best_index, best_en = calc_en_for_children(node, min_or_max)
-    node.set_value(best_en)
-    return best_index
+    if ismaximizing:
+        maxEval = -inf
+        maxIndex = 0
+        for i in range(len(node.children)):
+            eval = run_alphabeta(node.children[i], alpha, beta, False)
+            if max(maxEval, eval[0]) != maxEval:
+                maxEval = eval[0]
+                maxIndex = i
+            alpha = max(alpha, eval[0])
+            if beta <= alpha:
+                break
+        return ( maxEval, maxIndex )
+    else:
+        minEval = inf
+        minIndex = 0
+        for i in range(len(node.children)):
+            eval = run_alphabeta(node.children[i], alpha, beta, True)
+            if min(minEval, eval[0]) != minEval:
+                minEval = eval[0]
+                minIndex = i
+            beta = min(beta, eval[0])
+            if beta <= alpha:
+                break
+        return ( minEval, minIndex )
