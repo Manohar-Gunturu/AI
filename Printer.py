@@ -21,7 +21,6 @@ def printCard(flip_):
         return CBG + " \u25CF " + CEND
 
 
-
 def printBoard(board):
     print("\n")
     tmp = ''

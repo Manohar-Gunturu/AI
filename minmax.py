@@ -60,7 +60,7 @@ def calc_en_for_children(node, min_or_max):
 """
 
 
-def run_minmax(node):
+def run_minmax(node, trace_array):
 
     if len(node.children[0].children) == 0:
         # calculate e(n) on each state
@@ -68,10 +68,11 @@ def run_minmax(node):
         # print("applied ", min_or_max)
         best_index, best_en = calc_en_for_children(node, min_or_max)
         node.set_value(best_en)
+        trace_array.append(str(round(best_en, 1)))
         return best_index
 
     for child in node.children:
-        run_minmax(child)
+        run_minmax(child, trace_array)
 
     min_or_max = "max" if node.level % 2 == 0 else "min"
     # print("applied ", min_or_max)
@@ -83,7 +84,7 @@ def run_minmax(node):
 """
 Reference: https://en.wikipedia.org/wiki/Alpha%E2%80%93beta_pruning
 """
-def run_alphabeta(node, alpha, beta, ismaximizing):
+def run_alphabeta(node, alpha, beta, ismaximizing, trace_array):
     if len(node.children) == 0:
         return calc_en(node), 0
 
@@ -91,7 +92,7 @@ def run_alphabeta(node, alpha, beta, ismaximizing):
         maxEval = -inf
         maxIndex = 0
         for i in range(len(node.children)):
-            result = run_alphabeta(node.children[i], alpha, beta, False)
+            result = run_alphabeta(node.children[i], alpha, beta, False, trace_array)
             value = result[0]
             if max(maxEval, value) != maxEval:
                 maxEval = value
@@ -99,12 +100,13 @@ def run_alphabeta(node, alpha, beta, ismaximizing):
             alpha = max(alpha, maxEval)
             if alpha >= beta:
                 break
+        trace_array.append(str(round(maxEval, 1)))
         return maxEval, maxIndex
     else:
         minEval = inf
         minIndex = 0
         for i in range(len(node.children)):
-            result = run_alphabeta(node.children[i], alpha, beta, True)
+            result = run_alphabeta(node.children[i], alpha, beta, True, trace_array)
             value = result[0]
             if min(minEval, value) != minEval:
                 minEval = value
@@ -112,4 +114,5 @@ def run_alphabeta(node, alpha, beta, ismaximizing):
             beta = min(beta, minEval)
             if alpha >= beta:
                 break
+        trace_array.append(str(round(minEval, 1)))
         return minEval, minIndex

@@ -4,6 +4,7 @@
 import time
 from sys import exit
 from GameEngine import *
+from asycwrite import open_trace,write_trace, close_trace
 from minmax import run_minmax, run_alphabeta, inf, get_en_count, reset_en_count
 tmpinput = """0 1 A 1
             0 1 C 1
@@ -57,14 +58,23 @@ def take_ai_input():
     for child in root.children:
         generate_states(child)
     # run min max
+    open_trace(isalphabeta)
+    trace_content = []
     if not isalphabeta:
-        bestmove = run_minmax(root)
+        bestmove = run_minmax(root, trace_content)
+        trace_content.append(" ")
+        trace_content = [str(get_en_count()), str(round(root.value, 1)), ' '] + trace_content
+        write_trace(trace_content)
         print("e(n) brought up to root is ", root.value, " number of time e(n) applied", get_en_count())
     else:
-        bestmove1 = run_alphabeta(root, -inf, inf, True)
+        bestmove1 = run_alphabeta(root, -inf, inf, True, trace_content)
         bestmove = bestmove1[1]
+        trace_content.append(" ")
+        trace_content = [ str(get_en_count()), str(round(bestmove1[0], 1)), ' '] + trace_content
+        write_trace(trace_content)
         print("e(n) brought up to root is ", bestmove1, " number of time e(n) applied", get_en_count())
     move = root.children[bestmove].move
+    close_trace()
     return move
 
 
@@ -124,14 +134,23 @@ def take_ai_rec_input():
     for child in root.children:
         generate_recyc_states(child)
     # run min max
+    open_trace(isalphabeta)
+    trace_content = []
     if not isalphabeta:
-        bestmove = run_minmax(root)
+        bestmove = run_minmax(root, trace_content)
+        trace_content.append(" ")
+        trace_content = [str(get_en_count()), str(round(root.value, 1)), ' '] + trace_content
+        write_trace(trace_content)
         print("e(n) brought up to root is ", root.value, " number of time e(n) applied", get_en_count())
     else:
-        bestmove1 = run_alphabeta(root, -inf, inf, True)
+        bestmove1 = run_alphabeta(root, -inf, inf, True, trace_content)
         bestmove = bestmove1[1]
+        trace_content.append(" ")
+        trace_content = [str(get_en_count()), str(round(bestmove1[0], 1)), ' '] + trace_content
+        write_trace(trace_content)
         print("e(n) brought up to root is ", bestmove1, " number of time e(n) applied", get_en_count())
     move = root.children[bestmove].move
+    close_trace()
     return move
 
 
