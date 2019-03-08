@@ -160,14 +160,14 @@ while count <= 60:
         continue
     pos = result[1]
     recent_card = pos
-    if orient % 2 == 0:
-        tmp_track[column] -= 2
+    if inp[4] % 2 == 0:
+        global_track[inp[6]] -= 2
     else:
-        tmp_track[column] -= 1
-        tmp_track[column + 1] -= 1
+        global_track[inp[6]] -= 1
+        global_track[inp[6]] -= 1
     # remove the orginal card too
-    tmp_track[card_pos[1]] += 1
-    tmp_track[card_pos[3]] += 1
+    global_track[inp[1]] += 1
+    global_track[inp[3]] += 1
     if checkWinner(pos, player_choices, whose_turn):
         exit()
     count = count + 1
