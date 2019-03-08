@@ -105,6 +105,8 @@ def generate_states(parent: Node):
     # traverse column wise to check possibilities
     for column in range(8):
         row = parent.track[column]
+        if row < 0:
+            row = 0
         # check all 8 cards and if it is a possible to fit in pos
         for orient in range(1, 9):
             result = place_card(row, column, str(orient), parent.no_cards, copy.copy(parent.state), False)
@@ -131,10 +133,19 @@ def try_card_recycle(parent, card_pos):
     # parent.state[state_conv(card_pos[0], card_pos[1])] = 0
     for column in range(8):
         row = parent.track[column]
+        if row < 0:
+            row = 0
         for orient in range(1, 9):
             inp = card_pos + (orient, row, column)
             result = recycle_card(inp, parent.pos, copy.copy(parent.state), False)
-            if result is None:
+            tmp = parent.parent
+            results = []
+            while tmp != None:
+                x1 = recycle_card(inp, parent.pos, copy.copy(tmp.state), False)
+                results.append(True if x1 is None else False)
+                tmp = tmp.parent
+
+            if result is None or any(results):
                 continue
             tmp_track = copy.copy(parent.track)
             if orient % 2 == 0:
@@ -142,6 +153,12 @@ def try_card_recycle(parent, card_pos):
             else:
                 tmp_track[column] -= 1
                 tmp_track[column + 1] -= 1
+            #remove the orginal card too
+            tmp_track[card_pos[1]] += 1
+            tmp_track[card_pos[3]] += 1
+            for j in tmp_track:
+                if j == 13:
+                    java = "for debug error"
             (board, pos) = (result[0], result[1])
             node = Node(copy.copy(board), parent)
             node.set_level(parent.level + 1)
@@ -154,20 +171,24 @@ def try_card_recycle(parent, card_pos):
 def generate_recyc_states(parent: Node):
     for column in range(8):
         row = parent.track[column] + 1
+        if row == 12:
+            continue
+        if row < 0:
+            row = 0
         #check horizontal
         x1 = card_number(state_conv1(row, column, parent.state))
         x2 = None
         x3 = None
         if isValidcell(row, column+1):
             x2 = card_number(state_conv1(row, column + 1, parent.state))
-        elif isValidcell(row - 1, column):
-            x3 = card_number(state_conv1(row - 1, column, parent.state))
+        if isValidcell(row + 1, column):
+            x3 = card_number(state_conv1(row + 1, column, parent.state))
         if x1 == x2:
-            parent.track[column] += 1
-            parent.track[column + 1] += 1
+            #parent.track[column] += 1
+            #parent.track[column + 1] += 1
             try_card_recycle(parent, (row, column, row, column+1))
         elif x1 == x3:
-            parent.track[column] += 2
-            try_card_recycle(parent, (row, column, row - 1, column))
+            #parent.track[column] += 2
+            try_card_recycle(parent, (row, column, row + 1, column))
         else:
             continue

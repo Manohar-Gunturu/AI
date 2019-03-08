@@ -6,42 +6,32 @@ from sys import exit
 from GameEngine import *
 from asycwrite import open_trace,write_trace, close_trace
 from minmax import run_minmax, run_alphabeta, inf, get_en_count, reset_en_count
-tmpinput = """0 1 A 1
-            0 1 C 1
-            0 1 E 1
-            0 1 G 1
-            0 5 A 2
-            0 5 C 2
-            0 5 E 2
-            0 5 G 2
-            0 3 A 3
-            0 3 C 3
-            0 3 E 3
-            0 3 G 3
-            0 7 A 4
-            0 7 C 4
-            0 7 E 4
-            0 7 G 4
-            0 1 A 5
-            0 1 C 5
-            0 1 E 5
-            0 1 G 5
-            0 5 A 6
-            0 5 C 6
-            0 5 E 6
-            0 5 G 6"""
+tmpinput = """0 8 g 1
+              0 2 a 1
+              0 1 b 1
+              0 2 g 3
+              0 8 h 11
+              0 1 b 2
+              0 1 b 3
+              0 8 c 4
+              0 2 c 6
+              0 7 d 1
+              0 1 d 2
+              0 1 d 3"""
 
 names_list = [y for y in (x.strip() for x in tmpinput.splitlines()) if y]
 count = 1
 recent_card = []
 
-
+tmp_t = 0
 def take_human_input():
-    inp = input('Enter card details ').strip().split(' ')
-    #inp = names_list[count - 1].split(' ')
+    global tmp_t
+    #inp = input('Enter card details ').strip().split(' ')
+    inp = names_list[tmp_t].split(' ')
     if inp[0] != '0':
         print("Don't you know the input format for a move")
         return None
+    tmp_t += 1
     row, column = getCellPosition([inp[2], inp[3]])
     return row, column, inp[1]
 
@@ -148,7 +138,7 @@ def take_ai_rec_input():
         trace_content.append(" ")
         trace_content = [str(get_en_count()), str(round(bestmove1[0], 1)), ' '] + trace_content
         write_trace(trace_content)
-        print("e(n) brought up to root is ", bestmove1, " number of time e(n) applied", get_en_count())
+        print("e(n) brought up to root is ", bestmove1, " number of time e(n) applied", get_en_count(), len(root.children))
     move = root.children[bestmove].move
     close_trace()
     return move
@@ -170,6 +160,14 @@ while count <= 60:
         continue
     pos = result[1]
     recent_card = pos
+    if orient % 2 == 0:
+        tmp_track[column] -= 2
+    else:
+        tmp_track[column] -= 1
+        tmp_track[column + 1] -= 1
+    # remove the orginal card too
+    tmp_track[card_pos[1]] += 1
+    tmp_track[card_pos[3]] += 1
     if checkWinner(pos, player_choices, whose_turn):
         exit()
     count = count + 1
