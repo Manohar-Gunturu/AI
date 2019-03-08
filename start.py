@@ -3,21 +3,35 @@
 
 import time
 from sys import exit
+import time
 from GameEngine import *
 from asycwrite import open_trace,write_trace, close_trace
 from minmax import run_minmax, run_alphabeta, inf, get_en_count, reset_en_count
-tmpinput = """0 8 g 1
-              0 2 a 1
-              0 1 b 1
-              0 2 g 3
-              0 8 h 11
-              0 1 b 2
-              0 1 b 3
-              0 8 c 4
-              0 2 c 6
-              0 7 d 1
-              0 1 d 2
-              0 1 d 3"""
+tmpinput = """0 1 A 1
+            0 1 C 1
+            0 1 E 1
+            0 1 G 1
+            0 5 A 2
+            0 5 C 2
+            0 5 E 2
+            0 5 G 2
+            0 3 A 3
+            0 3 C 3
+            0 3 E 3
+            0 3 G 3
+            0 7 A 4
+            0 7 C 4
+            0 7 E 4
+            0 7 G 4
+            0 1 A 5
+            0 1 C 5
+            0 1 E 5
+            0 1 G 5
+            0 5 A 6
+            0 5 C 6
+            0 5 E 6
+            0 5 G 6"""
+
 
 names_list = [y for y in (x.strip() for x in tmpinput.splitlines()) if y]
 count = 1
@@ -30,7 +44,8 @@ def take_human_input():
     inp = names_list[tmp_t].split(' ')
     if inp[0] != '0':
         print("Don't you know the input format for a move")
-        return None
+        tmp_t += 1
+        return take_human_input()
     tmp_t += 1
     row, column = getCellPosition([inp[2], inp[3]])
     return row, column, inp[1]
@@ -40,6 +55,7 @@ global_track = [11, 11, 11, 11, 11, 11, 11, 11]
 
 
 def take_ai_input():
+    start_time = time.time()
     root = Node(copy.copy(Board), None)
     root.set_track(copy.copy(global_track))
     root.set_level(0)
@@ -55,14 +71,14 @@ def take_ai_input():
         trace_content.append(" ")
         trace_content = [str(get_en_count()), str(round(root.value, 1)), ' '] + trace_content
         write_trace(trace_content)
-        print("e(n) brought up to root is ", root.value, " number of time e(n) applied", get_en_count())
+        print("e(n) brought up to root is ", root.value, " number of time e(n) applied", get_en_count()," time", (time.time() - start_time))
     else:
         bestmove1 = run_alphabeta(root, -inf, inf, True, trace_content)
         bestmove = bestmove1[1]
         trace_content.append(" ")
         trace_content = [ str(get_en_count()), str(round(bestmove1[0], 1)), ' '] + trace_content
         write_trace(trace_content)
-        print("e(n) brought up to root is ", bestmove1, " number of time e(n) applied", get_en_count())
+        print("e(n) brought up to root is ", bestmove1, " number of time e(n) applied", get_en_count(), " time", (time.time() - start_time))
     move = root.children[bestmove].move
     close_trace()
     return move
@@ -115,6 +131,7 @@ print("-------- Started recycling phase ------")
 
 # sample test
 def take_ai_rec_input():
+    start_time = time.time()
     root = Node(copy.copy(Board), None)
     root.set_track(copy.copy(global_track))
     root.set_level(0)
@@ -131,14 +148,14 @@ def take_ai_rec_input():
         trace_content.append(" ")
         trace_content = [str(get_en_count()), str(round(root.value, 1)), ' '] + trace_content
         write_trace(trace_content)
-        print("e(n) brought up to root is ", root.value, " number of time e(n) applied", get_en_count())
+        print("e(n) brought up to root is ", root.value, " number of time e(n) applied", get_en_count()," time", (time.time() - start_time))
     else:
         bestmove1 = run_alphabeta(root, -inf, inf, True, trace_content)
         bestmove = bestmove1[1]
         trace_content.append(" ")
         trace_content = [str(get_en_count()), str(round(bestmove1[0], 1)), ' '] + trace_content
         write_trace(trace_content)
-        print("e(n) brought up to root is ", bestmove1, " number of time e(n) applied", get_en_count(), len(root.children))
+        print("e(n) brought up to root is ", bestmove1, " number of time e(n) applied", get_en_count(), " time", (time.time() - start_time))
     move = root.children[bestmove].move
     close_trace()
     return move

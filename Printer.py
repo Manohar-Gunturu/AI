@@ -30,3 +30,4 @@ def printBoard(board):
             tmp = ''
         tmp += printCard(board[p])
     print(tmp)
+

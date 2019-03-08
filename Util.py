@@ -398,9 +398,6 @@ def state_conv1(row1, column1, board_=Board):
     column1 = column1 + 1
     pos1 = row1 * 8
     pos1 = pos1 - (8 - column1) - 1
-    if not pos1 <= 95:
-        java = None
-        return 0
     return board_[pos1]
 
 

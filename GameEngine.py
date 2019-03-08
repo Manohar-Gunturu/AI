@@ -27,7 +27,8 @@ def recycle_card(inp, recent_card, board_, isprint=True):
     dright = state_conv1(pos[2], pos[3], board_)
     card_tmp = card_number(state_conv1(inp[0], inp[1], board_))
 
-    if inp[1] != 0:
+
+    if inp[0] != 0:
         if state_conv1(inp[0] - 1, inp[1], board_) != 0 and card_number(state_conv1(inp[0] - 1, inp[1], board_)) != card_tmp:
             if isprint:
                 print('Sorry it is an invalid recycling move - it has something on top.l')
@@ -127,7 +128,7 @@ def generate_states(parent: Node):
             parent.add_children(node)
             number_of_states += 1
 
-
+cache = {}
 def try_card_recycle(parent, card_pos):
     # remove this card and try to put at different position and orientations
     # parent.state[state_conv(card_pos[0], card_pos[1])] = 0
@@ -140,12 +141,13 @@ def try_card_recycle(parent, card_pos):
             result = recycle_card(inp, parent.pos, copy.copy(parent.state), False)
             tmp = parent.parent
             results = []
+            """
             while tmp != None:
                 x1 = recycle_card(inp, parent.pos, copy.copy(tmp.state), False)
                 results.append(True if x1 is None else False)
                 tmp = tmp.parent
-
-            if result is None or any(results):
+            """
+            if result is None :
                 continue
             tmp_track = copy.copy(parent.track)
             if orient % 2 == 0:
@@ -154,18 +156,23 @@ def try_card_recycle(parent, card_pos):
                 tmp_track[column] -= 1
                 tmp_track[column + 1] -= 1
             #remove the orginal card too
-            tmp_track[card_pos[1]] += 1
-            tmp_track[card_pos[3]] += 1
-            for j in tmp_track:
-                if j == 13:
-                    java = "for debug error"
+            #tmp_track[card_pos[1]] += 1
+            #tmp_track[card_pos[3]] += 1
             (board, pos) = (result[0], result[1])
+            key = ",".join(str(x) for x in board)
+            if key not in cache.keys():
+                cache[key] = "s"
+            else:
+                print("cache hit")
+                continue
+
             node = Node(copy.copy(board), parent)
             node.set_level(parent.level + 1)
             node.set_track(tmp_track)
             node.set_pos(pos)
             node.set_move(inp)
             parent.add_children(node)
+
 
 
 def generate_recyc_states(parent: Node):
@@ -184,11 +191,14 @@ def generate_recyc_states(parent: Node):
         if isValidcell(row + 1, column):
             x3 = card_number(state_conv1(row + 1, column, parent.state))
         if x1 == x2:
-            #parent.track[column] += 1
-            #parent.track[column + 1] += 1
+            parent.track[column] += 1
+            parent.track[column + 1] += 1
             try_card_recycle(parent, (row, column, row, column+1))
+            parent.track[column] -= 1
+            parent.track[column + 1] -= 1
         elif x1 == x3:
-            #parent.track[column] += 2
+            parent.track[column] += 2
             try_card_recycle(parent, (row, column, row + 1, column))
+            parent.track[column] -= 2
         else:
             continue
