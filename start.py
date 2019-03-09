@@ -40,8 +40,8 @@ recent_card = []
 tmp_t = 0
 def take_human_input():
     global tmp_t
-    #inp = input('Enter card details ').strip().split(' ')
-    inp = names_list[tmp_t].split(' ')
+    inp = input('Enter card details ').strip().split(' ')
+    #inp = names_list[tmp_t].split(' ')
     if inp[0] != '0':
         print("Don't you know the input format for a move")
         tmp_t += 1
@@ -106,6 +106,8 @@ while count <= 24:
     recent_card = pos
     count = count + 1
     print("count, ", count)
+    print(Board)
+    print(global_track)
     whose_turn = calc_turn(whose_turn)
 
 

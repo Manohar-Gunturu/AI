@@ -30,7 +30,7 @@ def calc_en(child):
             sum_w_o += cellval if val % 100 == 1 else 0.0
             sum_w_d += cellval if val % 100 == 3 else 0.0
             sum_r_o += cellval if val % 100 == 2 else 0.0
-            sum_w_d += cellval if val % 100 == 4 else 0.0
+            sum_r_d += cellval if val % 100 == 4 else 0.0
     en = sum_w_o + (3.0 * sum_w_d) - (2.0 * sum_r_d) - (1.5 * sum_r_o)
     return en
 
@@ -65,7 +65,6 @@ def run_minmax(node, trace_array):
     if len(node.children[0].children) == 0:
         # calculate e(n) on each state
         min_or_max = "max" if node.level % 2 == 0 else "min"
-        # print("applied ", min_or_max)
         best_index, best_en = calc_en_for_children(node, min_or_max)
         node.set_value(best_en)
         trace_array.append(str(round(best_en, 1)))
