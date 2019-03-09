@@ -106,8 +106,6 @@ while count <= 24:
     recent_card = pos
     count = count + 1
     print("count, ", count)
-    print(Board)
-    print(global_track)
     whose_turn = calc_turn(whose_turn)
 
 
