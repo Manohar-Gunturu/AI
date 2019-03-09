@@ -1,7 +1,7 @@
 # AI
 
 
-For 8 in level 2 we get level 3 e(n) as 
+For card 8 in level 2 we get level 3 e(n) as 
 47.0
 76.0
 49.0
@@ -116,7 +116,7 @@ For 8 in level 2 we get level 3 e(n) as
 114.0  
 <br>
 Minimum of these is 31  
-When card 2 at level 2 level 3 e(n) as
+When card 2 at level 2, level 3 e(n) as
 
 67.0
 96.0
