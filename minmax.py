@@ -25,7 +25,7 @@ def calc_en(child):
     sum_r_d = 0.0
     for i in range(12):
         for j in range(8):
-            cellval = (12 - i) * 10 + j + 1
+            cellval = (12 - i) * 10 + j + 1 - 10
             val = state_conv1(i, j, child.state)
             sum_w_o += cellval if val % 100 == 1 else 0.0
             sum_w_d += cellval if val % 100 == 3 else 0.0
