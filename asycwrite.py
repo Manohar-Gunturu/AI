@@ -9,7 +9,7 @@ def open_trace(isab):
     if isab:
         filename = "traceab"+str(decision_tracker)+".txt"
     else:
-        filename = "tracemm1"+str(decision_tracker)+".txt"
+        filename = "tracemm"+str(decision_tracker)+".txt"
     try:
         file_handle = open(filename, "w")
         decision_tracker += 1

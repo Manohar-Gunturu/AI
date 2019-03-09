@@ -1,14 +1,24 @@
 from sys import exit
 from GameEngine import *
+import time
 from asycwrite import open_trace,write_trace, close_trace
 from minmax import run_minmax, run_alphabeta, inf, get_en_count, reset_en_count
 
-b = [0, 0, 0, 0, 0, 2104, 0, 1104, 0, 0, 0, 0, 0, 2101, 0, 1101, 0, 0, 0, 0, 0, 1904, 0, 904, 0, 0, 0, 0, 0, 1901, 0, 901, 0, 0, 0, 0, 0, 1704, 0, 704, 0, 0, 0, 0, 0, 1701, 0, 701, 0, 0, 2302, 2303, 0, 1504, 0, 504, 2204, 2201, 2404, 2401, 0, 1501, 0, 501, 1803, 1802, 2003, 2002, 0, 1304, 0, 304, 1401, 1404, 1601, 1604, 0, 1301, 0, 301, 802, 803, 1002, 1003, 1202, 1203, 0, 104, 204, 201, 404, 401, 604, 601, 0, 101]
-t = [6, 6, 5, 5, 9, -1, 11, -1]
+b = [0, 0, 0, 0, 0, 2304, 0, 0, 0, 1004, 0, 0, 0, 2301, 0, 0, 0, 1001, 0, 0, 0, 1804, 0, 0, 0, 804, 0, 0, 0, 1801, 0, 0, 0, 801, 0, 0, 0, 1604, 0, 2404, 0, 604, 0, 0, 0, 1601, 0, 2401, 0, 601, 0, 0, 0, 1404, 0, 2204, 0, 404, 2002, 2003, 0, 1401, 0, 2201, 0, 401, 1903, 1902, 0, 1204, 2103, 2102, 0, 204, 1501, 1504, 0, 1201, 1701, 1704, 0, 201, 902, 903, 1102, 1103, 1302, 1303, 104, 101, 304, 301, 504, 501, 704, 701]
+t = [10, 0, 5, 7, 9, -1, 7, 3]
 printBoard(b)
+start_time = time.time()
 root = Node(copy.copy(b), None)
 root.set_track(copy.copy(t))
 root.set_level(0)
 root.set_pos((7, 2, 7, 3))
 root.set_no_cards(25)
 generate_recyc_states(root)
+for child in root.children:
+    generate_recyc_states(child)
+trace_content = []
+bestmove = run_minmax(root, trace_content)
+trace_content.append(" ")
+trace_content = [str(get_en_count()), str(round(root.value, 1)), ' '] + trace_content
+write_trace(trace_content)
+print("e(n) brought up to root is ", root.value, " number of time e(n) applied", get_en_count()," time", (time.time() - start_time))
