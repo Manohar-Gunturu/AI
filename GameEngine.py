@@ -154,7 +154,7 @@ def try_card_recycle(parent, card_pos):
                 tmp_track[column] -= 1
                 tmp_track[column + 1] -= 1
             (board, pos) = (result[0], result[1])
-
+            # check so we wont repeat a state of parent
             results = []
             tmp = parent.parent
             while tmp is not None:
