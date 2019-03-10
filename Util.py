@@ -336,14 +336,14 @@ def calc_turn(turn):
 
 isalphabeta_1 = input("alpha-beta should be yes or no")
 isalphabeta = True if isalphabeta_1 == "yes" else False
-"""
 istrace_1 = input("trace should be yes or no")
 istrace = True if istrace_1 == "yes" else False
-"""
 aifirst_1 = input("is AI plays first -  yes or no")
 aifirst = 1 if aifirst_1 == "yes" else 0
-
-player1_choice = input('Enter your Player 1 choice either dot or color ').lower()
+if aifirst == 1:
+    player1_choice = 'dot'
+else:
+    player1_choice = input('Enter your Player 1 choice either dot or color ').lower()
 player2_choice = ('dot' if player1_choice == 'color' else 'color')
 player_choices = {player1_choice: '1', player2_choice: '2'}
 count = 1

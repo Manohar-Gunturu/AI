@@ -37,16 +37,11 @@ names_list = [y for y in (x.strip() for x in tmpinput.splitlines()) if y]
 count = 1
 recent_card = []
 
-tmp_t = 0
 def take_human_input():
-    global tmp_t
     inp = input('Enter card details ').strip().split(' ')
-    #inp = names_list[tmp_t].split(' ')
     if inp[0] != '0':
         print("Don't you know the input format for a move")
-        tmp_t += 1
         return take_human_input()
-    tmp_t += 1
     row, column = getCellPosition([inp[2], inp[3]])
     return row, column, inp[1]
 
@@ -64,23 +59,23 @@ def take_ai_input():
     for child in root.children:
         generate_states(child)
     # run min max
-    open_trace(isalphabeta)
+    if istrace: open_trace(isalphabeta)
     trace_content = []
     if not isalphabeta:
         bestmove = run_minmax(root, trace_content)
         trace_content.append(" ")
-        trace_content = [str(get_en_count()), str(round(root.value, 1)), ' '] + trace_content
-        write_trace(trace_content)
+        if istrace: trace_content = [str(get_en_count()), str(round(root.value, 1)), ' '] + trace_content
+        if istrace: write_trace(trace_content)
         print("e(n) brought up to root is ", root.value, " number of time e(n) applied", get_en_count()," time", (time.time() - start_time))
     else:
         bestmove1 = run_alphabeta(root, -inf, inf, True, trace_content)
         bestmove = bestmove1[1]
         trace_content.append(" ")
-        trace_content = [ str(get_en_count()), str(round(bestmove1[0], 1)), ' '] + trace_content
+        if istrace: trace_content = [ str(get_en_count()), str(round(bestmove1[0], 1)), ' '] + trace_content
         write_trace(trace_content)
         print("e(n) brought up to root is ", bestmove1, " number of time e(n) applied", get_en_count(), " time", (time.time() - start_time))
     move = root.children[bestmove].move
-    close_trace()
+    if istrace: close_trace()
     return move
 
 
@@ -109,8 +104,9 @@ while count <= 24:
     whose_turn = calc_turn(whose_turn)
 
 
-# if while loop exited then it means placing 24 cards is done so entering into recycling phase
+
 def process_input():
+    global incx
     try:
         inp = input('Enter card details ').strip().split(' ')
         if inp[0].isdigit():
@@ -122,7 +118,7 @@ def process_input():
         if isValidcell(*lpos) and isValidcell(*rpos) \
                 and isValidcell(*npos):
             return lpos + rpos + (int(inp[4]),) + npos
-    except (ValueError, IndexError):
+    except (ValueError, IndexError, TypeError):
         return ()
 
 
@@ -141,23 +137,23 @@ def take_ai_rec_input():
     for child in root.children:
         generate_recyc_states(child)
     # run min max
-    open_trace(isalphabeta)
+    if istrace: open_trace(isalphabeta)
     trace_content = []
     if not isalphabeta:
         bestmove = run_minmax(root, trace_content)
         trace_content.append(" ")
-        trace_content = [str(get_en_count()), str(round(root.value, 1)), ' '] + trace_content
-        write_trace(trace_content)
+        if istrace: trace_content = [str(get_en_count()), str(round(root.value, 1)), ' '] + trace_content
+        if istrace: write_trace(trace_content)
         print("e(n) brought up to root is ", root.value, " number of time e(n) applied", get_en_count()," time", (time.time() - start_time))
     else:
         bestmove1 = run_alphabeta(root, -inf, inf, True, trace_content)
         bestmove = bestmove1[1]
         trace_content.append(" ")
-        trace_content = [str(get_en_count()), str(round(bestmove1[0], 1)), ' '] + trace_content
-        write_trace(trace_content)
+        if istrace: trace_content = [str(get_en_count()), str(round(bestmove1[0], 1)), ' '] + trace_content
+        if istrace: write_trace(trace_content)
         print("e(n) brought up to root is ", bestmove1, " number of time e(n) applied", get_en_count(), " time", (time.time() - start_time))
     move = root.children[bestmove].move
-    close_trace()
+    if istrace: close_trace()
     return move
 
 
@@ -181,7 +177,7 @@ while count <= 60:
         global_track[inp[6]] -= 2
     else:
         global_track[inp[6]] -= 1
-        global_track[inp[6]] -= 1
+        if inp[6]+ 1 <= 7: global_track[inp[6]+ 1] -= 1
     # remove the orginal card too
     global_track[inp[1]] += 1
     global_track[inp[3]] += 1
