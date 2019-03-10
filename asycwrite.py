@@ -1,6 +1,6 @@
 
 
-decision_tracker = 1
+decision_tracker = 2
 file_handle = None
 
 
@@ -20,6 +20,7 @@ def open_trace(isab):
 def write_trace(lines):
     if file_handle is not None:
         file_handle.write("\n".join(lines))
+        file_handle.flush()
 
 
 def close_trace():

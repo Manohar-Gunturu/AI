@@ -49,6 +49,9 @@ def take_human_input():
 global_track = [11, 11, 11, 11, 11, 11, 11, 11]
 
 
+if istrace:
+    open_trace(isalphabeta)
+
 def take_ai_input():
     start_time = time.time()
     root = Node(copy.copy(Board), None)
@@ -59,23 +62,21 @@ def take_ai_input():
     for child in root.children:
         generate_states(child)
     # run min max
-    if istrace: open_trace(isalphabeta)
     trace_content = []
     if not isalphabeta:
         bestmove = run_minmax(root, trace_content)
-        trace_content.append(" ")
-        if istrace: trace_content = [str(get_en_count()), str(round(root.value, 1)), ' '] + trace_content
+        trace_content.append("\n")
+        if istrace: trace_content = [str(get_en_count()), str(round(root.value, 1)), ''] + trace_content
         if istrace: write_trace(trace_content)
         print("e(n) brought up to root is ", root.value, " number of time e(n) applied", get_en_count()," time", (time.time() - start_time))
     else:
         bestmove1 = run_alphabeta(root, -inf, inf, True, trace_content)
         bestmove = bestmove1[1]
-        trace_content.append(" ")
-        if istrace: trace_content = [ str(get_en_count()), str(round(bestmove1[0], 1)), ' '] + trace_content
+        trace_content.append("\n")
+        if istrace: trace_content = [ str(get_en_count()), str(round(bestmove1[0], 1)), ''] + trace_content
         write_trace(trace_content)
         print("e(n) brought up to root is ", bestmove1, " number of time e(n) applied", get_en_count(), " time", (time.time() - start_time))
     move = root.children[bestmove].move
-    if istrace: close_trace()
     return move
 
 
@@ -137,23 +138,21 @@ def take_ai_rec_input():
     for child in root.children:
         generate_recyc_states(child)
     # run min max
-    if istrace: open_trace(isalphabeta)
     trace_content = []
     if not isalphabeta:
         bestmove = run_minmax(root, trace_content)
-        trace_content.append(" ")
-        if istrace: trace_content = [str(get_en_count()), str(round(root.value, 1)), ' '] + trace_content
+        trace_content.append("\n")
+        if istrace: trace_content = [str(get_en_count()), str(round(root.value, 1)), ''] + trace_content
         if istrace: write_trace(trace_content)
         print("e(n) brought up to root is ", root.value, " number of time e(n) applied", get_en_count()," time", (time.time() - start_time))
     else:
         bestmove1 = run_alphabeta(root, -inf, inf, True, trace_content)
         bestmove = bestmove1[1]
-        trace_content.append(" ")
-        if istrace: trace_content = [str(get_en_count()), str(round(bestmove1[0], 1)), ' '] + trace_content
+        trace_content.append("\n")
+        if istrace: trace_content = [str(get_en_count()), str(round(bestmove1[0], 1)), ''] + trace_content
         if istrace: write_trace(trace_content)
         print("e(n) brought up to root is ", bestmove1, " number of time e(n) applied", get_en_count(), " time", (time.time() - start_time))
     move = root.children[bestmove].move
-    if istrace: close_trace()
     return move
 
 
@@ -187,3 +186,6 @@ while count <= 60:
     whose_turn = calc_turn(whose_turn)
 
 print('Match is a draw, ;)')
+
+import atexit
+atexit.register(close_trace)
