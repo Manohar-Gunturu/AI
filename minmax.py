@@ -1,4 +1,4 @@
-from Util import state_conv1, card_number, check_winner_column, check_winner_row, check_winner_diag1, check_winner_diag2, whatMakesWin, get_player_choice, is_ai_1
+from Util import state_conv1, get_player_choice1, card_number, check_winner_column, check_winner_row, check_winner_diag1, check_winner_diag2, whatMakesWin, get_player_choice, is_ai_1
 import operator
 from math import inf
 
@@ -15,6 +15,7 @@ def reset_en_count():
     en_count = 0
 
 
+pchoices = get_player_choice()
 
 def checkWinnerUtil1(card, board_):
     x1 = check_winner_column((card[0], card[1]),  board_)
@@ -27,21 +28,70 @@ def checkWinnerUtil1(card, board_):
     x8 = check_winner_diag2((card[2], card[3]), board_)
     # wins[0] for colors and wins[1] for dots
     wins = [0, 0]
-    wins[0] = x1[1][0] + x2[1][0] + x3[1][0] + x4[1][0] + x5[1][0] + x6[1][0] + x7[1][0] + x8[1][0]
-    wins[1] = x1[1][1] + x2[1][1] + x3[1][1] + x4[1][1] + x5[1][1] + x6[1][1] + x7[1][1] + x8[1][1]
+    wins1 = [0, 0]
+    if x1[0]:
+        tmp = whatMakesWin(x1)
+        wins = [(x + y) for (x, y) in zip(wins, tmp)]
+    if x2[0]:
+        tmp = whatMakesWin(x2)
+        wins = [(x + y) for (x, y) in zip(wins, tmp)]
+    if x3[0]:
+        tmp = whatMakesWin(x3)
+        wins = [(x + y) for (x, y) in zip(wins, tmp)]
+    if x4[0]:
+        tmp = whatMakesWin(x4)
+        wins = [(x + y) for (x, y) in zip(wins, tmp)]
+    if x5[0]:
+        tmp = whatMakesWin(x5)
+        wins = [(x + y) for (x, y) in zip(wins, tmp)]
 
+    if x6[0]:
+        tmp = whatMakesWin(x6)
+        wins = [(x + y) for (x, y) in zip(wins, tmp)]
 
-    return wins
+    if x7[0]:
+        tmp = whatMakesWin(x7)
+        wins = [(x + y) for (x, y) in zip(wins, tmp)]
+
+    if x8[0]:
+        tmp = whatMakesWin(x8)
+        wins = [(x + y) for (x, y) in zip(wins, tmp)]
+
+    score = wins
+    if score[0] >= 1 and score[1] >= 1:  # it is draw so last player win
+        return 0, None
+    elif score[0] >= 1:
+        return pchoices['color'], None
+    elif score[1] >= 1:
+        return pchoices['dot'], None
+
+    wins1[0] = x1[1][0] + x2[1][0] + x3[1][0] + x4[1][0] + x5[1][0] + x6[1][0] + x7[1][0] + x8[1][0]
+    wins1[1] = x1[1][1] + x2[1][1] + x3[1][1] + x4[1][1] + x5[1][1] + x6[1][1] + x7[1][1] + x8[1][1]
+    return -1,  wins1
+
 
 def calc_en(child):
     if len(child.children) != 0:
         return child.value
     global en_count
     en_count += 1
-    matches = checkWinnerUtil1(child.pos,child.state)
+    whowon, matches = checkWinnerUtil1(child.pos, child.state)
     who_ai_first = is_ai_1()
-    what_ai_select  = get_player_choice()
-    ai_chose =  what_ai_select[0] if who_ai_first else what_ai_select[1]
+    what_ai_select = get_player_choice1()
+    ai_chose = what_ai_select[0] if who_ai_first else what_ai_select[1]
+    if whowon == 1:
+        if who_ai_first:
+            return 1000000000
+        else:
+            return -1000000000
+    elif whowon == 2:
+        if who_ai_first:
+            return -1000000000
+        else:
+            return 1000000000
+    elif whowon == 0:
+        return -1000000000
+
     if ai_chose == "color":
         matches[1] = matches[1] - matches[0] - 100
     else:
