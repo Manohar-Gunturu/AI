@@ -53,7 +53,10 @@ def take_ai_input():
     generate_states(root)
     for child in root.children:
         generate_states(child)
+        for gchild in child.children:
+            generate_states(gchild)
     # run min max
+
     trace_content = []
     if not isalphabeta:
         bestmove = run_minmax(root, trace_content)
