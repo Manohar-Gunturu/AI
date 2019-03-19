@@ -7,43 +7,35 @@ import time
 from GameEngine import *
 from asycwrite import open_trace,write_trace, close_trace
 from minmax import run_minmax, run_alphabeta, inf, get_en_count, reset_en_count
-tmpinput = """0 1 A 1
-            0 1 C 1
-            0 1 E 1
-            0 1 G 1
-            0 5 A 2
-            0 5 C 2
-            0 5 E 2
-            0 5 G 2
-            0 3 A 3
-            0 3 C 3
-            0 3 E 3
-            0 3 G 3
-            0 7 A 4
-            0 7 C 4
-            0 7 E 4
-            0 7 G 4
-            0 1 A 5
-            0 1 C 5
-            0 1 E 5
-            0 1 G 5
-            0 5 A 6
-            0 5 C 6
-            0 5 E 6
-            0 5 G 6"""
+tmpinput = """
+0 1 a 1
+0 1 e 1
+0 6 e 2
+0 6 f 2
+0 5 e 4
+0 1 e 5
+0 2 e 6
+0 2 e 8
+0 2 e 10
+0 2 d 1
+0 2 d 5
+0 6 d 9"""
 
 
 names_list = [y for y in (x.strip() for x in tmpinput.splitlines()) if y]
 count = 1
 recent_card = []
-
 def take_human_input():
-    inp = input('Enter card details ').strip().split(' ')
-    if inp[0] != '0':
-        print("Don't you know the input format for a move")
+    try:
+        inp = input('Enter card details ').strip().split(' ')
+        #inp = names_list[trc].split(' ')
+        if inp[0] != '0':
+            print("Don't you know the input format for a move")
+            return take_human_input()
+        row, column = getCellPosition([inp[2], inp[3]])
+        return row, column, inp[1]
+    except (ValueError, IndexError, TypeError):
         return take_human_input()
-    row, column = getCellPosition([inp[2], inp[3]])
-    return row, column, inp[1]
 
 
 global_track = [11, 11, 11, 11, 11, 11, 11, 11]
@@ -107,7 +99,6 @@ while count <= 24:
 
 
 def process_input():
-    global incx
     try:
         inp = input('Enter card details ').strip().split(' ')
         if inp[0].isdigit():
@@ -156,7 +147,7 @@ def take_ai_rec_input():
     return move
 
 
-while count <= 60:
+while count <= 40:
     print('Player ', whose_turn, ' turn')
     if whose_turn % 2 == aifirst:
         reset_en_count()

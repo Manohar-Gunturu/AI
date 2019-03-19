@@ -20,35 +20,35 @@ def isValidcell(row, column):
         return False
 
 
-def c_color(row, column):
+def c_color(row, column, board_=Board):
     pos = state_conv(row, column)
-    if Board[pos] == 0:
+    if board_[pos] == 0:
         return -1
-    if Board[pos] % 100 == 2 or Board[pos] % 100 == 4:
+    if board_[pos] % 100 == 2 or board_[pos] % 100 == 4:
         return "red"
     else:
         return "white"
 
 
-def c_dot(row, column):
+def c_dot(row, column,  board_=Board):
     pos = state_conv(row, column)
-    if Board[pos] == 0:
+    if board_[pos] == 0:
         return -1
-    if Board[pos] % 100 == 3 or Board[pos] % 100 == 4:
+    if board_[pos] % 100 == 3 or board_[pos] % 100 == 4:
         return 1
     else:
         return 0
 
 
-def check_winner_diag1(_card):
+def check_winner_diag1(_card, board_=Board):
     (_row, _column) = _card
     (tmprow, tmpcolumn) = (_row, _column)
     match = [0, 0]
-    compare = [c_color(tmprow, tmpcolumn), c_dot(tmprow, tmpcolumn)]
+    compare = [c_color(tmprow, tmpcolumn, board_), c_dot(tmprow, tmpcolumn, board_)]
 
     # checking for color match
-    while isValidcell(tmprow, tmpcolumn) and state_conv1(tmprow, tmpcolumn) != 0 \
-            and c_color(tmprow, tmpcolumn) == compare[0]:
+    while isValidcell(tmprow, tmpcolumn) and state_conv1(tmprow, tmpcolumn, board_) != 0 \
+            and c_color(tmprow, tmpcolumn, board_) == compare[0]:
         match[0] += 1
         tmprow -= 1
         tmpcolumn += 1
@@ -56,8 +56,8 @@ def check_winner_diag1(_card):
     # checking for dot match
 
     (tmprow, tmpcolumn) = (_row, _column)
-    while isValidcell(tmprow, tmpcolumn) and state_conv1(tmprow, tmpcolumn) != 0 \
-            and c_dot(tmprow, tmpcolumn) == compare[1]:
+    while isValidcell(tmprow, tmpcolumn) and state_conv1(tmprow, tmpcolumn, board_) != 0 \
+            and c_dot(tmprow, tmpcolumn, board_) == compare[1]:
         match[1] += 1
         tmprow -= 1
         tmpcolumn += 1
@@ -74,8 +74,8 @@ def check_winner_diag1(_card):
     # checking for dot match
 
     (tmprow, tmpcolumn) = (_row + 1, _column - 1)
-    while isValidcell(tmprow, tmpcolumn) and state_conv1(tmprow, tmpcolumn) != 0 \
-            and c_dot(tmprow, tmpcolumn) == compare[1]:
+    while isValidcell(tmprow, tmpcolumn) and state_conv1(tmprow, tmpcolumn, board_) != 0 \
+            and c_dot(tmprow, tmpcolumn, board_) == compare[1]:
         match[1] += 1
         tmprow += 1
         tmpcolumn -= 1
@@ -86,39 +86,39 @@ def check_winner_diag1(_card):
         return (False, match)
 
 
-def check_winner_diag2(_card):
+def check_winner_diag2(_card, board_=Board):
     (_row, _column) = _card
     (tmprow, tmpcolumn) = (_row, _column)
     match = [0, 0]
-    compare = [c_color(tmprow, tmpcolumn), c_dot(tmprow, tmpcolumn)]
+    compare = [c_color(tmprow, tmpcolumn,board_ ), c_dot(tmprow, tmpcolumn, board_)]
 
     # checking for color match
-    while isValidcell(tmprow, tmpcolumn) and state_conv1(tmprow, tmpcolumn) != 0 \
-            and c_color(tmprow, tmpcolumn) == compare[0]:
+    while isValidcell(tmprow, tmpcolumn) and state_conv1(tmprow, tmpcolumn, board_) != 0 \
+            and c_color(tmprow, tmpcolumn, board_) == compare[0]:
         match[0] += 1
         tmprow -= 1
         tmpcolumn -= 1
 
     # checking for dot match
     (tmprow, tmpcolumn) = (_row, _column)
-    while isValidcell(tmprow, tmpcolumn) and state_conv1(tmprow, tmpcolumn) != 0 \
-            and c_dot(tmprow, tmpcolumn) == compare[1]:
+    while isValidcell(tmprow, tmpcolumn) and state_conv1(tmprow, tmpcolumn, board_) != 0 \
+            and c_dot(tmprow, tmpcolumn, board_) == compare[1]:
         match[1] += 1
         tmprow -= 1
         tmpcolumn -= 1
 
     # checking for color match
     (tmprow, tmpcolumn) = (_row + 1, _column + 1)
-    while isValidcell(tmprow, tmpcolumn) and state_conv1(tmprow, tmpcolumn) != 0 \
-            and c_color(tmprow, tmpcolumn) == compare[0]:
+    while isValidcell(tmprow, tmpcolumn) and state_conv1(tmprow, tmpcolumn, board_) != 0 \
+            and c_color(tmprow, tmpcolumn, board_) == compare[0]:
         match[0] += 1
         tmprow += 1
         tmpcolumn += 1
 
     # checking for dot match
     (tmprow, tmpcolumn) = (_row + 1, _column + 1)
-    while isValidcell(tmprow, tmpcolumn) and state_conv1(tmprow, tmpcolumn) != 0 \
-            and c_dot(tmprow, tmpcolumn) == compare[1]:
+    while isValidcell(tmprow, tmpcolumn) and state_conv1(tmprow, tmpcolumn, board_) != 0 \
+            and c_dot(tmprow, tmpcolumn, board_) == compare[1]:
         match[1] += 1
         tmprow += 1
         tmpcolumn += 1
@@ -129,7 +129,7 @@ def check_winner_diag2(_card):
         return (False, match)
 
 
-def check_winner_row(_card):
+def check_winner_row(_card, board_=Board):
     (_row, _column) = _card
     (compare1, compare) = (['', ''], ['', ''])
     match = [1, 1]
@@ -137,10 +137,10 @@ def check_winner_row(_card):
     iswin = [1, 1]
     while (row_tmp - 1) >= 0 and (match[0] < 4 or match[1] < 4):
         row_tmp = row_tmp - 1
-        if state_conv1(row_tmp, _column) == 0:
+        if state_conv1(row_tmp, _column, board_) == 0:
             break
-        compare1[0] = c_color(row_tmp, _column)
-        compare1[1] = c_dot(row_tmp, _column)
+        compare1[0] = c_color(row_tmp, _column, board_)
+        compare1[1] = c_dot(row_tmp, _column, board_)
         if compare[0] != compare1[0]:
             compare[0] = compare1[0]
             iswin[0] = max(match[0], iswin[0])
@@ -162,7 +162,7 @@ def check_winner_row(_card):
         return (False, iswin)
 
 
-def check_winner_column(_card):
+def check_winner_column(_card, board_=Board):
     (_row, _column) = _card
     (compare, compare1) = (['', ''], ['', ''])
     match = [1, 1]
@@ -170,13 +170,13 @@ def check_winner_column(_card):
     iswin = [1, 1]
     while (column_tmp - 1) >= 0 and (match[0] < 4 or match[1] < 4):
         column_tmp = column_tmp - 1
-        if state_conv1(_row, column_tmp) == 0:
+        if state_conv1(_row, column_tmp, board_) == 0:
             iswin = [max(iswin[0], match[0]), max(iswin[1], match[1])]
             (compare, compare1) = (['', ''], ['', ''])
             match = [1, 1]
             continue
-        compare1[0] = c_color(_row, column_tmp)
-        compare1[1] = c_dot(_row, column_tmp)
+        compare1[0] = c_color(_row, column_tmp, board_)
+        compare1[1] = c_dot(_row, column_tmp, board_)
         if compare[0] != compare1[0]:
             compare[0] = compare1[0]
             iswin[0] = max(match[0], iswin[0])
@@ -211,15 +211,15 @@ def whatMakesWin(stat):
         return [0, 0]
 
 
-def checkWinnerUtil(card):
-    x1 = check_winner_column((card[0], card[1]))
-    x2 = check_winner_column((card[2], card[3]))
-    x3 = check_winner_row((card[0], card[1]))
-    x4 = check_winner_row((card[2], card[3]))
-    x5 = check_winner_diag1((card[0], card[1]))
-    x6 = check_winner_diag1((card[2], card[3]))
-    x7 = check_winner_diag2((card[0], card[1]))
-    x8 = check_winner_diag2((card[2], card[3]))
+def checkWinnerUtil(card, board_=Board):
+    x1 = check_winner_column((card[0], card[1]), board_)
+    x2 = check_winner_column((card[2], card[3]), board_)
+    x3 = check_winner_row((card[0], card[1]), board_)
+    x4 = check_winner_row((card[2], card[3]), board_)
+    x5 = check_winner_diag1((card[0], card[1]), board_)
+    x6 = check_winner_diag1((card[2], card[3]), board_)
+    x7 = check_winner_diag2((card[0], card[1]), board_)
+    x8 = check_winner_diag2((card[2], card[3]), board_)
     # wins[0] for colors and wins[1] for dots
     wins = [0, 0]
     if x1[0]:
@@ -347,6 +347,12 @@ else:
 player2_choice = ('dot' if player1_choice == 'color' else 'color')
 player_choices = {player1_choice: '1', player2_choice: '2'}
 count = 1
+
+def get_player_choice():
+    return (player1_choice, player2_choice)
+
+def is_ai_1():
+    return aifirst
 
 whose_turn = 1
 number_angle = {
