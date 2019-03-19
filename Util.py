@@ -349,7 +349,10 @@ player_choices = {player1_choice: '1', player2_choice: '2'}
 count = 1
 
 def get_player_choice():
-    return (player1_choice, player2_choice)
+    return {player1_choice: 1, player2_choice: 2}
+
+def get_player_choice1():
+    return ( player1_choice, player2_choice )
 
 def is_ai_1():
     return aifirst
