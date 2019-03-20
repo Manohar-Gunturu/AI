@@ -12,6 +12,10 @@ def getCellPosition(position):
     row = 12 - int(position[1])
     return (row, column)
 
+def getCellPosition_rev(position):
+    row = 12 - int(position[0])
+    column = chr(position[1] + 65)
+    return (column, row)
 
 def isValidcell(row, column):
     if 11 >= row >= 0 and 7 >= column >= 0:
@@ -150,8 +154,8 @@ def check_winner_row(_card, board_=Board):
 
         if compare[1] != compare1[1]:
             compare[1] = compare1[1]
-            match[1] = 1
             iswin[1] = max(match[1], iswin[1])
+            match[1] = 1
         else:
             match[1] = match[1] + 1
 
@@ -362,10 +366,7 @@ istrace = True if istrace_1 == "yes" else False
 aifirst_1 = input("is AI plays first -  yes or no")
 aifirst = 1 if aifirst_1 == "yes" else 0
 ai_player_num = 1 if aifirst_1 == "yes" else 2
-if aifirst == 1:
-    player1_choice = 'dot'
-else:
-    player1_choice = input('Enter your Player 1 choice either dot or color ').lower()
+player1_choice = input('Enter your Player 1 choice either dot or color ').lower()
 player2_choice = ('dot' if player1_choice == 'color' else 'color')
 player_choices = {player1_choice: '1', player2_choice: '2'}
 count = 1

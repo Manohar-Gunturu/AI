@@ -74,6 +74,7 @@ def take_ai_input():
         write_trace(trace_content)
         print("e(n) brought up to root is ", bestmove1, " number of time e(n) applied", get_en_count(), " time", (time.time() - start_time))
     move = root.children[bestmove].move
+    print("move is ", 0, move[2], getCellPosition_rev(move))
     return move
 
 
