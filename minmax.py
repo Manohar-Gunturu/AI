@@ -80,18 +80,17 @@ def calc_en(child):
     what_ai_select = get_player_choice1()
     ai_chose = what_ai_select[0] if who_ai_first else what_ai_select[1]
     if whowon == 1:
-        if who_ai_first:
-            return 1000000000
+        if who_ai_first == 1:
+            return 100000000
         else:
-            return -1000000000
+            return -100000000
     elif whowon == 2:
-        if who_ai_first:
-            return -1000000000
+        if who_ai_first == 1:
+            return -100000000
         else:
-            return 1000000000
+            return 100000000
     elif whowon == 0:
-        return -1000000000
-
+        return -100000000
     if ai_chose == "color":
         matches[1] = matches[1] - matches[0] - 100
     else:

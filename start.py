@@ -43,7 +43,7 @@ global_track = [11, 11, 11, 11, 11, 11, 11, 11]
 
 if istrace:
     open_trace(isalphabeta)
-
+player_choicesai = get_player_choice();
 def take_ai_input():
     start_time = time.time()
     root = Node(copy.copy(Board), None)
@@ -53,9 +53,11 @@ def take_ai_input():
     generate_states(root)
     for child in root.children:
         generate_states(child)
-        for gchild in child.children:
-            generate_states(gchild)
     # run min max
+
+    for child in root.children:
+        if checkWinner_AI(child.pos, player_choicesai, whose_turn, child.state):
+            return child.move
 
     trace_content = []
     if not isalphabeta:

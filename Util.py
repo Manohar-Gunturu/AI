@@ -261,8 +261,8 @@ def checkWinnerUtil(card, board_=Board):
     return wins
 
 
-def checkWinner(card, _choice, player):
-    score = checkWinnerUtil(card)
+def checkWinner(card, _choice, player, board_=Board):
+    score = checkWinnerUtil(card, board_)
 
     if all(v == 0 for v in score):
         return False
@@ -275,6 +275,26 @@ def checkWinner(card, _choice, player):
         return True
     elif score[1] >= 1:
         print('Player ', _choice['dot'], ' has won the game as he choosen dot')
+        return True
+    else:
+        return False
+
+def checkWinner_AI(card, _choice, player, board):
+    score = checkWinnerUtil(card, board)
+
+    if all(v == 0 for v in score):
+        return False
+    wonby = -1
+    if score[0] >= 1 and score[1] >= 1:
+        return True
+    elif score[0] >= 1:
+        wonby = _choice['color']
+    elif score[1] >= 1:
+        wonby = _choice['dot']
+    else:
+        return False
+
+    if wonby == ai_player_num:
         return True
     else:
         return False
@@ -337,9 +357,11 @@ def calc_turn(turn):
 isalphabeta_1 = input("alpha-beta should be yes or no")
 isalphabeta = True if isalphabeta_1 == "yes" else False
 istrace_1 = input("trace should be yes or no")
+ai_player_num = 0
 istrace = True if istrace_1 == "yes" else False
 aifirst_1 = input("is AI plays first -  yes or no")
 aifirst = 1 if aifirst_1 == "yes" else 0
+ai_player_num = 1 if aifirst_1 == "yes" else 2
 if aifirst == 1:
     player1_choice = 'dot'
 else:
